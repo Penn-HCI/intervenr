@@ -1,0 +1,81 @@
+{% extends "onboard/base.html" %}
+{% load static %}
+
+{% block tab_title %} Sign Up | Intervenr {% endblock tab_title %}
+
+{% block onboard_flow_title %} 
+  {% if ONBOARD_CODE_ERROR %} 
+    Sign Up Error
+  {% else %} 
+    Sign Up Complete
+  {% endif %} 
+{% endblock onboard_flow_title %}
+
+{% block consent %}
+{% endblock consent%}
+
+{% block main_text %}
+  <div class="main__spacer"></div>
+  <div>
+    One last item and you'll be done! To test that the URL collection is working properly, please open a <b>new browser window or tab</b> and navigate to a website like <a href="https://www.upenn.edu/" target="_blank">upenn.edu</a>. Then, if you visit <a href="https://intervenr.stanford.edu/" target="_blank">intervenr.stanford.edu</a>, you should see that the "URL Records" section has been populated with a new record.
+  </div>
+  <div class="main__spacer"></div>
+  <div>
+    If you aren't seeing URL records but are visiting new websites, please ensure that the extension is installed and try visiting another site like <a href="https://www.stanford.edu/" target="_blank">stanford.edu</a>. If you still encounter issues, email us.
+  </div>
+  <div class="main__spacer"></div>
+  <div>
+      <img src="{% static 'test_url_collection.png' %}" class="image-center">
+  </div>
+  <div class="main__spacer"></div>
+  <div class="main__text main-center txt-center">
+    {{ completion_message }}
+  </div>
+  <div class="main__text main-center txt-center">
+    <b>Please copy and paste this Completion Code to Prolific: </b>
+
+    <input type="text" value="CDN33UE0" id="completionCode" readonly>
+
+    <div class="tooltip">
+      <button onclick="copyFunction()" onmouseout="outFunc()">
+        <span class="tooltiptext" id="completionTooltip">Copy to clipboard</span>
+        Copy
+        </button>
+      </div>
+  </div>
+{% endblock main_text %}
+
+{% block main_form_action %}
+  <div class="main__form--action">
+      <a href="{% url form_url.link %}" class="main__button main-center clean-style">{{ completion_link_message }}</a>
+  </div>
+{% endblock main_form_action %}
+
+<!-- {% block page_scripts %}
+  <script>
+    function copyFunction() {
+      // Get the text field
+      var copyText = document.getElementById("completionCode");
+
+      // Select the text field
+      copyText.select();
+
+      // Copy the text inside the text field
+      navigator.clipboard.writeText(copyText.value).then(
+        () => {
+          /* clipboard successfully set */
+          var tooltip = document.getElementById("completionTooltip");
+          tooltip.innerHTML = "Copied " + copyText.value;
+        },
+        () => {
+          /* clipboard write failed */
+        },
+      );
+    }
+
+    function outFunc() {
+      var tooltip = document.getElementById("completionTooltip");
+      tooltip.innerHTML = "Copy to clipboard";
+    }
+  </script>
+{% endblock page_scripts %} -->

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/simple_admin.css' %}">
+  <link href="https://tofsjonas.github.io/sortable/sortable.css" rel="stylesheet" />
+  <script src="https://tofsjonas.github.io/sortable/sortable.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+{% endblock styles %}
+
+{% block tab_title %} Dashboard | Intervenr {% endblock tab_title %}
+
+{% block header_title %}
+  <h1 class="header--title header-center">Administrator Dashboard</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+<div class="main__spacer --sm"></div>
+
+<h1 class="main__header">Quick Insights</h1>
+{% if quick_dash_insights != None %}
+<div class="main__grid--stats">
+  <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total Experiment Members:</strong><span class="main__grid--stat-count">{{ quick_dash_insights.total_exp_mems_cnt }}</span></span>
+  <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Onboarded Participants:</strong><span class="main__grid--stat-count">{{ quick_dash_insights.onboarded_mems_cnt }}</span></span>
+  <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Offboarded Participants:</strong><span class="main__grid--stat-count">{{ quick_dash_insights.offboard_mems_cnt }}</span></span>
+  <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Waitlisted Participants:</strong><span class="main__grid--stat-count">{{ quick_dash_insights.waitlisted_mems_cnt }}</span></span>
+  <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total Ad Records:</strong><span class="main__grid--stat-count">{{ quick_dash_insights.total_ad_cnt }}</span></span>
+</div>
+{% endif %}
+
+  <div class="main__spacer --sm"></div>
+
+<!-- <div id="myPlot" style="width:100%;max-width:700px;"></div> -->
+<!--{{ graph_stats|json_script:'graph_stats' }} reference doc: https://docs.djangoproject.com/en/3.0/ref/templates/builtins/#json-script-->
+
+<script>
+  // var graph_stats = JSON.parse(document.getElementById('graph_stats').textContent);
+  // var x_axis = graph_stats['x_axis'];
+  // var y_axis = graph_stats['y_axis'];
+
+  // // Define Data
+  // var data = [{
+  //   x: x_axis,
+  //   y: y_axis,
+  //   mode:"lines"
+  // }];
+
+  // var layout = {
+  //   xaxis: {
+  //     range: [
+  //     x_axis[0], 
+  //     x_axis[-1]], 
+  //     title: "Experiment Date"
+  //   },
+  //   yaxis: {
+  //     range: [y_axis[0],
+  //     y_axis[-1]], 
+  //     title: "Average Ads Per User"
+  //   },
+  //   title: "Average Ad Count vs Experiment Date"
+  // };
+
+  // // Display with Plotly
+  // Plotly.newPlot("myPlot", data, layout);
+
+  // function copyToClipboard(element) {
+  //   var $temp = $("<input>");
+  //   $("body").append($temp);
+  //   $temp.val($(element).text()).select();
+  //   document.execCommand("copy");
+  //   $temp.remove();
+  // }
+
+</script>
+
+<div class="main__spacer --sm"></div>
+
+<h1 class="main__header">Survey Summary</h1>
+{% if survey_summary_stats != None %}
+<div class="main__grid--stats">
+<span class="main__grid--stat-container">
+  <strong class="main__grid--stat-label">Midpoint Survey Incomplete:</strong>
+  <span class="main__grid--stat-count">{{ survey_summary_stats.incomplete_midpoint_cnt }}</span>
+  <p id="incomplete_midpoint_emails" class="main__grid--stat-deet">{{ survey_summary_stats.incomplete_midpoint }}</p>
+  <button onclick="copyToClipboard('#incomplete_midpoint_emails')" style="margin-top: 1.5rem; cursor: pointer;"><i class="fa fa-copy" style="font-size:24px;"></i></button>
+</span>
+<span class="main__grid--stat-container">
+  <strong class="main__grid--stat-label">Final Survey Incomplete:</strong>
+  <span class="main__grid--stat-count">{{ survey_summary_stats.incomplete_final_cnt }}</span>
+  <p id="incomplete_final_emails" class="main__grid--stat-deet">{{ survey_summary_stats.incomplete_final }}</p>
+  <button onclick="copyToClipboard('#incomplete_final_emails')" style="margin-top: 1.5rem; cursor: pointer;"><i class="fa fa-copy" style="font-size:24px;"></i></button>
+</span>
+
+{% if fetch_ineligible_survey_users != None %}
+  <span class="main__grid--stat-container">
+    <strong class="main__grid--stat-label">Midpoint Survey Ineligible:</strong>
+    <span class="main__grid--stat-count">{{ fetch_ineligible_survey_users.ineligible_mid_survey_users_cnt }}</span>
+    <p id="ineligible_midpoint_emails" class="main__grid--stat-deet">{{fetch_ineligible_survey_users.ineligible_mid_survey_users }}</p>
+    <button onclick="copyToClipboard('#ineligible_midpoint_emails')" style="margin-top: 1.5rem; cursor: pointer;"><i class="fa fa-copy" style="font-size:24px;"></i></button>
+  </span>
+  <span class="main__grid--stat-container">
+    <strong class="main__grid--stat-label">Final Survey Ineligible:</strong>
+    <span class="main__grid--stat-count">{{ fetch_ineligible_survey_users.ineligible_final_survey_users_cnt }}</span>
+    <p id="ineligible_final_emails" class="main__grid--stat-deet">{{ fetch_ineligible_survey_users.ineligible_final_survey_users }}</p>
+    <button onclick="copyToClipboard('#ineligible_final_emails')" style="margin-top: 1.5rem; cursor: pointer;"><i class="fa fa-copy" style="font-size:24px;"></i></button>
+  </span>
+{% endif %}
+</div>
+{% endif %}
+
+
+<div class="main__spacer --sm"></div>
+
+<h1 class="main__header">Bulk Actions</h1>
+<div class="main__action-grid">
+  <form class="main__action-grid--form" action="{% url 'frontend:revoke-onboard-perm' %}" method="POST">
+    <button class="main__action-grid--button">
+      Revoke onboard permission
+    </button>
+    {% csrf_token %}
+  </form>
+
+  <form class="main__action-grid--form" action="{% url 'frontend:grant-onboard-perm' %}" method="POST">
+    <input class="main__action-grid--input" placeholder="Enter email(s) here..." id="input_emails" type="text" name="input_emails" required>
+    <button class="main__action-grid--button">
+      Grant onboard permission
+    </button>
+    {% csrf_token %}
+  </form>
+
+  <form class="main__action-grid--form" action="{% url 'frontend:mass-offboard-users' %}" method="POST">
+    <input class="main__action-grid--input" placeholder="Enter email(s) here..." id="input_emails" type="text" name="input_emails" required>
+    <button class="main__action-grid--button">
+      Mass offboard users
+    </button>
+    {% csrf_token %}
+  </form>
+</div>
+
+<div class="main__spacer --sm"></div>
+
+{% if page_obj != None %}
+<table class="sortable">
+  <thead>
+    <tr>
+      <th>Contact Email</th>
+      <th>Total Ads</th>
+      <th>Average Ads / Day</th>
+      <th>Ad Count Today</th>
+      <th>Swap Partner Email</th>
+      <th>Onboard Permission</th>
+      <th>Onboarded</th>
+      <th>Offboarded</th>
+      <th>Intro Survey</th>
+      <th>Midpoint Survey</th>
+      <th>Final Survey</th>
+      <th>Experiment Type</th>
+      <th>Experimental Condition</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for user_stats in page_obj %}
+        <tr>
+          <td>{{ user_stats.contact_email }}</td>
+          {% if user_stats.total_ads == 0 %}
+            <td bgcolor="#f2a8a8">{{ user_stats.total_ads }}</td>
+          {% else %}
+            <td>{{ user_stats.total_ads }}</td>
+          {% endif %}
+          {% if user_stats.avg_daily_ads == 0 %}
+            <td bgcolor="#f2a8a8">{{ user_stats.avg_daily_ads }}</td>
+          {% else %}
+            <td>{{ user_stats.avg_daily_ads }}</td>
+          {% endif %}
+          {% if user_stats.today_ads == 0 %}
+            <td bgcolor="#f2a8a8">{{ user_stats.today_ads }}</td>
+          {% else %}
+            <td>{{ user_stats.today_ads }}</td>
+          {% endif %}
+          <td>{{ user_stats.swap_partner_email }}</td>
+          <td>{{ user_stats.has_onboard_permission }}</td>
+          <td>{{ user_stats.has_onboarded }}</td>
+          <td>{{ user_stats.has_offboarded }}</td>
+          <td>{{ user_stats.intro_survey_bool }}</td>
+          <td>
+            <a href="{{user_stats.midpoint_survey_link}}" target="_blank">
+              {{ user_stats.midpoint_survey_bool }}
+            </a>
+          </td>
+          <td>
+            <a href="{{user_stats.final_survey_link}}" target="_blank">
+              {{ user_stats.final_survey_bool }}
+            </a>
+          </td>
+          <td>{{ user_stats.experiment_type }}</td>
+          <td>{{ user_stats.experiment_type }}</td> <!--TODO-->
+      </tr>
+    {% empty %}
+      <tr><td>No Experiment Member Found</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="main__spacer --sm"></div>
+
+<div class="dashboard-pagination">
+  <li class="page-item">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page=1">&laquo; First</a>
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+  </li>
+
+  <li class="page-item">
+    {% if page_obj.has_next %}
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+    {% endif %}
+  </li>
+
+  <li class="page-item">
+    Page {{page_obj.number}} of {{ page_obj.paginator.num_pages }}
+    </li>
+</div>
+{% endif %}
+
+  <div class="main__spacer"></div>
+
+{% endblock main_body %}
+
+{% block page_scripts %}
+  <script src="{% static 'js/simple_admin.js' %}" defer></script>
+{% endblock page_scripts %}

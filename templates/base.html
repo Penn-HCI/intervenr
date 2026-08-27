@@ -1,0 +1,106 @@
+{% load static %}
+{% comment 'Documentation & References' %}
+  This is the base template for the Intervenr website. There's a couple different components to the website setup.
+  - navbar: Links to all of the different key parts of the site, different for logged in users vs anonymous users vs staff users.
+    - Anonymous View:
+      Intervenr (Home Page)
+      Get Started
+      Privacy
+      About
+    - Logged In
+      Intervenr (Home Page)
+      My Data
+      Privacy
+      About
+    - Staff
+      Intervenr
+      My Data
+      Dashboard
+      Admin
+      Privacy
+      About
+  - header: A header that displays text for each page.
+  - main: The main content for the page, including section headers, and body text, forms, or interactive elements.
+  - footer: The main footer for the website, with contact information and a copyright.
+
+  For reference, see the following:
+  https://docs.djangoproject.com/en/3.2/ref/templates/language/
+  https://docs.djangoproject.com/en/3.2/ref/templates/builtins/#ref-templates-builtins-filters
+  https://docs.djangoproject.com/en/3.2/ref/templates/builtins/#ref-templates-builtins-tags
+{% endcomment %}
+<!DOCTYPE html>
+<html>
+    <head>
+      {# For overriding the stylesheet to use on a specific page. #}
+      {% block styles %}
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+      {% endblock styles %}
+      <meta charset="UTF-8">
+      <meta name="description" content="Intervenr: UPenn web experiment measuring the impacts of interventions on media consumption and political bias.">
+      <meta name="keywords" content="UPenn CS, CS, media bias, web experiment">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+      <title>
+        {% block tab_title %} 
+          Intervenr
+        {% endblock tab_title %} 
+      </title>
+    </head>
+    <body>
+      <nav class="navbar">
+        <a class="navbar__logo" href="{% url 'frontend:index' %}"><img src="{% static 'intervenr-logo.svg' %}"></a>
+        {% if not experiment_member %}
+          <a class="navbar__element" href="{% url 'frontend:start' %}">Sign up / Login</a>
+        {% endif %}
+        {% if request.user.is_staff %}
+          <a class="navbar__element" href="{% url 'frontend:dashboard' %}">Dashboard</a>
+          <a class="navbar__element" href="{% url 'frontend:simple-admin' %}">Admin</a>
+        {% endif %}
+        <a class="navbar__element" href="{% url 'frontend:privacy' %}">Privacy</a>
+        <a class="navbar__element" href="{% url 'frontend:about' %}">About</a>
+        {% if experiment_member %}
+          <a class="navbar__element" href="{% url 'frontend:logout' %}">Logout</a>
+        {% endif %}
+      </nav>
+      <div class="content">
+        {# Header Image randomly chosen as 'img/header_img_{number}.jpg' #}
+        {% with img_base='img/header_img_' rand='1234'|random %}
+          {% with full_header_img=img_base|add:rand|add:'.jpg' %}
+            <img src="{% static full_header_img %}" class="header--img">
+          {% endwith %}
+        {% endwith %}
+        <header class="header">
+          {% block header_title %}
+            <h1 class="header--title">What is Intervenr?</h1>
+          {% endblock header_title %}
+        </header>
+        <main class="main">
+          {% block main_body %}
+            <h1 class="main__header">
+              Learn about the Intervenr Experiment.
+            </h1>
+            <div class="main__text">
+              {% lorem 10 p %}
+            </div>
+            <img src="{% static 'intervenr-favicon.svg' %}" class="main__image">
+            <div class="main__text">
+              {% lorem 10 p %}
+            </div>
+          {% endblock main_body %}
+        </main>
+        <footer class="footer">
+          {% block footer_text %}
+            <span class="footer__copyright">
+              &copy; 2023 Intervenr Team, University of Pennsylvania. All Rights Reserved.
+            </span>
+            <span class="footer__contact">
+              Contact us at <a href="mailto:intervenr-research-study@seas.upenn.edu">intervenr-research-study@seas.upenn.edu</a>.
+            </span>
+          {% endblock footer_text %}
+        </footer>
+      </div>
+      {% block page_scripts %}
+      {% endblock page_scripts %}
+  </body>
+</html>

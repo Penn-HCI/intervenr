@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/simple_admin.css' %}">
+{% endblock styles %}
+
+{% block tab_title %} Admin Shortcuts | Intervenr {% endblock tab_title %}
+
+{% block header_title %}
+  <h1 class="header--title header-center">Administrator Shortcuts</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+  <div class="main__spacer--sm"></div>
+
+  <h1 class="main__header">Quick Insights</h1>
+  <div class="main__grid--stats">
+    <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total Experiment Members:</strong><span class="main__grid--stat-count">{{ experiment_members_count }}</span></span>
+    <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total TLD Records:</strong><span class="main__grid--stat-count">{{ tld_records_count }}</span></span>
+    <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total URL Records:</strong><span class="main__grid--stat-count">{{ url_records_count }}</span></span>
+    <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total Intervention Counts:</strong><span class="main__grid--stat-count">{{ intervention_counts_count }}</span></span>
+    <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total Applied Interventions:</strong><span class="main__grid--stat-count">{{ intervention_counts_sum }}</span></span>
+    <span class="main__grid--stat-container"><strong class="main__grid--stat-label">Total Visible Records:</strong><span class="main__grid--stat-count">{{ visible_records_count }}</span></span>
+  </div>
+
+  <h1 class="main__header">Quick Links</h1>
+  <div class="main__link-grid">
+    <a href="{% url 'frontend:dl-participants' %}" download="participants_data.csv" class="main__link-grid--link">
+      <img class="ico-label" src="{% static 'img/download.png' %}">
+      Download Participant Data
+    </a>
+    <a href="{% url 'frontend:dl-url-records' %}" download="url_records_data.csv" class="main__link-grid--link">
+      <img class="ico-label" src="{% static 'img/download.png' %}">
+      Download URL Record Data
+    </a>
+    <a href="{% url 'frontend:dl-intervention-cnts' %}" download="intervention_counts_data.csv" class="main__link-grid--link">
+      <img class="ico-label" src="{% static 'img/download.png' %}">
+      Download Intervention Data
+    </a>
+    <a href="{% url 'frontend:dl-visible-links' %}" download="visible_link_records_data.csv" class="main__link-grid--link">
+      <img class="ico-label" src="{% static 'img/download.png' %}">
+      Download Visible Link Data
+    </a>
+  </div>
+
+  <h1 class="main__header">Quick Actions</h1>
+  <div class="main__text">
+    To reset tracked TLDs, please upload a <code>.CSV</code> file with a <code>tld</code> column that contains the TLDs 
+    that should be tracked and an <code>apply_intervention</code> column if heavy and light interventions should be applied to the column with
+    true and false values as well as an <code>apply_collect_links</code> if links should be collected on the domain. 
+    To set intervention groups, please upload a <code>.CSV</code> file with the column <code>user_id</code>
+    and <code>intervention_type</code>. All of the corresponding participants with matching <code>user_id</code> will be set to their
+    given <code>intervention_type</code>. To add new onboarding codes, upload a <code>.CSV</code> file with an <code>onboard_code</code>
+    column. These will all be added. Finally, to offboard users, please upload a <code>.CSV</code> file with a column <code>user_id</code>
+    that corresponds to the users that should be offboarded. For fine tuning or quick adjustments, please use the row display systems.
+  </div>
+  <div class="main__action-grid">
+    <form id="quick-assign-pairs" class="main__action-grid--form" action="{% url 'frontend:sa-assign-pairs' %}" method="POST" enctype="multipart/form-data">
+      <label class="main__action-grid--label">
+        Assign Ad Swap Pairs
+      </label>
+      {% csrf_token %}
+    </form>
+    <form id="quick-reset-tlds" class="main__action-grid--form" action="{% url 'frontend:sa-reset-tlds' %}" method="POST" enctype="multipart/form-data">
+      <label class="main__action-grid--label">
+        <img class="ico-label" src="{% static 'img/upload.png' %}">
+        Reset Tracked TLDs
+        <input name="file_input" type="file" accept=".csv" class="main__action-grid--file-input">
+      </label>
+      {% csrf_token %}
+    </form>
+    <form id="quick-intervention-groups" class="main__action-grid--form" action="{% url 'frontend:sa-assign-intervention-groups' %}" method="POST" enctype="multipart/form-data">
+      <label class="main__action-grid--label">
+        <img class="ico-label" src="{% static 'img/upload.png' %}">
+        Set Intervention Groups
+        <input name="file_input" type="file" accept=".csv" class="main__action-grid--file-input">
+      </label>
+      {% csrf_token %}
+    </form>
+    <form id="quick-onboard-codes" class="main__action-grid--form" action="{% url 'frontend:sa-add-onboard-codes' %}" method="POST" enctype="multipart/form-data">
+      <label class="main__action-grid--label">
+        <img class="ico-label" src="{% static 'img/upload.png' %}">
+        Add New Onboarding Codes
+        <input name="file_input" type="file" accept=".csv" class="main__action-grid--file-input">
+      </label>
+      {% csrf_token %}
+    </form>
+    <form id="quick-offboard-users" class="main__action-grid--form" action="{% url 'frontend:sa-offboard-users' %}" method="POST" enctype="multipart/form-data">
+      <label class="main__action-grid--label">
+        <img class="ico-label" src="{% static 'img/upload.png' %}">
+        Offboard User List
+        <input name="file_input" type="file" accept=".csv" class="main__action-grid--file-input">
+      </label>
+      {% csrf_token %}      
+    </form>
+  </div>
+
+  <div class="main__spacer--sm"></div>
+
+  <h1 class="main__header">Data</h1>
+  <div class="main__text">
+    <strong>Note:</strong> for more fine grained control of data, or to see all possible fields and modify fields directly for individual objects, please visit the advanced
+    administrator interface <a href="{% url 'admin:index' %}">here</a>. Also note that this system is <strong>hard coded</strong> for <strong>4 days</strong>
+    of control testing, and then interventions that run until the user offboards. 
+  </div>
+
+  <div class="main__data" id="experiment-members">
+    <div class="main__data--header"><h1 class="main__data--header-top">Experiment Members</h1></div>
+    <div class="main__data--row dark-row label-row">
+      <div class="main__data--col c4 select"><strong>Select</strong></div>
+      <div class="main__data--col c8"><strong>Creation Date</strong></div>
+      <div class="main__data--col c8"><strong>Experiment Type</strong></div>
+      <div class="main__data--col c8"><strong>Onboard Permiss.</strong></div>
+      <div class="main__data--col c8"><strong>Onboarded</strong></div>
+      <div class="main__data--col c8"><strong>Experiment Day</strong></div>
+      <div class="main__data--col c8"><strong>Intervention</strong></div>
+      <div class="main__data--col c8"><strong>Offboarded</strong></div>
+      <div class="main__data--col c8"><strong>Offboard Date</strong></div>
+      <div class="main__data--col c16"><strong>Contact Email</strong></div>
+      <div class="main__data--col c24"><strong>User ID</strong></div>
+    </div>
+    {% for exp_mem_obj in experiment_members_list %}
+      <div class="main__data--row {% cycle '' 'dark-row' %}">
+        <div class="main__data--col c4"><input type="checkbox" recordId="{{ exp_mem_obj.user_id }}" ></div>
+        <div class="main__data--col c8">{{ exp_mem_obj.creation_date|date:"g:iA, n/j" }}</div>
+        <div class="main__data--col c8">{% if exp_mem_obj.experiment_type == 1 %} News Media {% elif exp_mem_obj.experiment_type == 2 %} Ads {% else %} Unassigned {% endif %}</div>
+        <div class="main__data--col c8">{% if exp_mem_obj.has_onboard_permission %} Yes {% else %} No {% endif %}</div>
+        <div class="main__data--col c8">{% if exp_mem_obj.has_onboarded %} Yes {% else %} No {% endif %}</div>
+        <div class="main__data--col c8">{{ exp_mem_obj.get_experiment_day }}</div>
+        <div class="main__data--col c8">{{ exp_mem_obj.intervention_type }}</div>
+        <div class="main__data--col c8">{% if exp_mem_obj.offboard_user %} Yes {% else %} No {% endif %}</div>
+        <div class="main__data--col c8">{% if exp_mem_obj.offboard_date %} {{ exp_mem_obj.offboard_date|date:"g:iA, n/j" }} {% else %} N/A {% endif %}</div>
+        <div class="main__data--col c16">{{ exp_mem_obj.contact_email }}</div>
+        <div class="main__data--col c24">{{ exp_mem_obj.user_id }}</div>
+      </div>
+    {% empty %}
+      <div class="main__data--footer"><strong>No Experiment Members</strong></div>
+    {% endfor %}
+    <div class="main__data--page-holder">
+      <div class="main__data--pages">
+        {% if experiment_members_curr_page > 0 %} 
+          <a href="{% url 'frontend:simple-admin' %}?expg={{ experiment_members_curr_page|add:'-1' }}" class="main__data--page-num">Previous</a> 
+        {% endif %}
+        {% if experiment_members_curr_page > 1  %} 
+          <a href="{% url 'frontend:simple-admin' %}?expg={{ experiment_members_curr_page|add:'-2' }}" class="main__data--page-num"> {{ experiment_members_curr_page|add:'-1' }} </a> 
+        {% endif %}
+        {% if experiment_members_curr_page > 0 %}
+          <a href="{% url 'frontend:simple-admin' %}?expg={{ experiment_members_curr_page|add:'-1' }}" class="main__data--page-num"> {{ experiment_members_curr_page }} </a>
+        {% endif %}
+        {# CURRENT PAGE #}
+          <a class="main__data--page-num scale-txt"> {{ experiment_members_curr_page|add:'1' }} </a> 
+        {# CURRENT PAGE #}
+        {% if experiment_members_curr_page|add:'1' <= experiment_members_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?expg={{ experiment_members_curr_page|add:'1' }}" class="main__data--page-num"> {{ experiment_members_curr_page|add:'2' }} </a> 
+        {% endif %}
+        {% if experiment_members_curr_page|add:'2' <= experiment_members_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?expg={{ experiment_members_curr_page|add:'2' }}" class="main__data--page-num"> {{ experiment_members_curr_page|add:'3' }} </a> 
+        {% endif %}
+        {% if experiment_members_curr_page < experiment_members_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?expg={{ experiment_members_curr_page|add:'1' }}" class="main__data--page-num">Next</a> 
+        {% endif %}
+      </div>
+
+      <div class="main__data--mass-action">
+        <label for="experiment-member-action-dropdown" class="main__data--drop-down">
+          Action:
+        </label>
+        <select id="experiment-member-action-dropdown">
+          <option value="">-------------</option>
+          <option value="delete-users">Delete Users</option>
+          <option value="offboard-users">Offboard Users</option>
+          <option value="assign-heavy">Assign Heavy Intervention</option>
+          <option value="assign-light">Assign Light Intervention</option>
+          <option value="assign-control">Assign Control Group</option>
+          <option value="allow-onboard-users">Allow Users to Onboard</option>
+          <option value="assign-news-experiment">Assign to News Experiment</option>
+          <option value="assign-ads-experiment">Assign to Ads Experiment</option>
+        </select>
+        <div class="main__data--mass-action-submit">
+          Submit
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main__data" id="url-records">
+    <div class="main__data--header"><h1 class="main__data--header-top">URL Records</h1></div>
+    <div class="main__data--row dark-row label-row">
+      <div class="main__data--col c4 select"><strong>Select</strong></div>
+      <div class="main__data--col c8"><strong>Link Chain</strong></div>
+      <div class="main__data--col c8"><strong>Start Time</strong></div>
+      <div class="main__data--col c8"><strong>End Time</strong></div>
+      <div class="main__data--col c10"><strong>Transition Type</strong></div>
+      <div class="main__data--col c24 fl-end"><strong>URL</strong></div>
+      <div class="main__data--col c5"><strong>Expand</strong></div>
+    </div>
+    {% for url_obj in url_records_list %}
+      <div class="main__data--row {% cycle '' 'dark-row' %}">
+        <div class="main__data--col c4"><input type="checkbox" recordId="{{ url_obj.record_id }}" ></div>
+        <div class="main__data--col c8">{% if url_obj.has_previous_record %} Yes {% else %} No {% endif %}</div>
+        <div class="main__data--col c8">{{ url_obj.start_time|date:"g:iA, n/j" }}</div>
+        <div class="main__data--col c8">{% if url_obj.end_time %} {{ url_obj.end_time|date:"g:iA, n/j" }} {% else %} N/A {% endif %}</div>
+        <div class="main__data--col c10">{{ url_obj.transition_type }}</div>
+        <div class="main__data--col c24 fl-end clip">{{ url_obj.url }}</div>
+        <div class="main__data--col c5"><img class="ico exp-btn" src="{% static 'img/plus.png' %}"></div>
+      </div>
+    {% empty %}
+      <div class="main__data--footer"><strong>No URL Records</strong></div>
+    {% endfor %}
+    <div class="main__data--page-holder">
+      <div class="main__data--pages">
+        {% if url_records_curr_page > 0 %} 
+          <a href="{% url 'frontend:simple-admin' %}?urlpg={{ url_records_curr_page|add:'-1' }}" class="main__data--page-num">Previous</a> 
+        {% endif %}
+        {% if url_records_curr_page > 1  %} 
+          <a href="{% url 'frontend:simple-admin' %}?urlpg={{ url_records_curr_page|add:'-2' }}" class="main__data--page-num"> {{ url_records_curr_page|add:'-1' }} </a> 
+        {% endif %}
+        {% if url_records_curr_page > 0 %}
+          <a href="{% url 'frontend:simple-admin' %}?urlpg={{ url_records_curr_page|add:'-1' }}" class="main__data--page-num"> {{ url_records_curr_page }} </a>
+        {% endif %}
+        {# CURRENT PAGE #}
+          <a class="main__data--page-num scale-txt"> {{ url_records_curr_page|add:'1' }} </a> 
+        {# CURRENT PAGE #}
+        {% if url_records_curr_page|add:'1' <= url_records_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?urlpg={{ url_records_curr_page|add:'1' }}" class="main__data--page-num"> {{ url_records_curr_page|add:'2' }} </a> 
+        {% endif %}
+        {% if url_records_curr_page|add:'2' <= url_records_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?urlpg={{ url_records_curr_page|add:'2' }}" class="main__data--page-num"> {{ url_records_curr_page|add:'3' }} </a> 
+        {% endif %}
+        {% if url_records_curr_page < url_records_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?urlpg={{ url_records_curr_page|add:'1' }}" class="main__data--page-num">Next</a> 
+        {% endif %}
+      </div>
+
+      <div class="main__data--mass-action">
+        <label for="url-record-action-dropdown" class="main__data--drop-down">
+          Action:
+        </label>
+        <select id="url-record-action-dropdown">
+          <option value="">-------------</option>
+          <option value="delete-url-records">Delete Records</option>
+        </select>
+        <div class="main__data--mass-action-submit">
+          Submit
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main__super-data-flex">
+    <div class="main__data ilblock" id="tld-records">
+      <div class="main__data--header"><h1 class="main__data--header-top">TLD Records</h1></div>
+      <div class="main__data--row dark-row label-row">
+        <div class="main__data--col c4 select"><strong>Select</strong></div>
+        <div class="main__data--col c10"><strong>TLD</strong></div>
+        <div class="main__data--col c8"><strong>Interventions</strong></div>
+        <div class="main__data--col c8"><strong>Collect Links</strong></div>
+        <div class="main__data--col c5"><strong>Expand</strong></div>
+      </div>
+      {% for tld_obj in tld_records_list %}
+        <div class="main__data--row {% cycle '' 'dark-row' %}">
+          <div class="main__data--col c4"><input type="checkbox" recordId="{{ tld_obj.tld }}" ></div>
+          <div class="main__data--col c10 fl-end clip">{{ tld_obj.tld }}</div>
+          <div class="main__data--col c8">{% if tld_obj.apply_intervention %} Yes {% else %} No {% endif %}</div>
+          <div class="main__data--col c8">{% if tld_obj.apply_collect_links %} Yes {% else %} No {% endif %}</div>
+          <div class="main__data--col c5"><img class="ico exp-btn" src="{% static 'img/plus.png' %}"></div>
+        </div>
+      {% empty %}
+        <div class="main__data--footer"><strong>No TLD Records</strong></div>
+      {% endfor %}
+      <div class="main__data--page-holder">
+        <div class="main__data--pages">
+          {% if tld_records_curr_page > 0 %} 
+            <a href="{% url 'frontend:simple-admin' %}?tldpg={{ tld_records_curr_page|add:'-1' }}" class="main__data--page-num">Previous</a> 
+          {% endif %}
+          {% if tld_records_curr_page > 1  %} 
+            <a href="{% url 'frontend:simple-admin' %}?tldpg={{ tld_records_curr_page|add:'-2' }}" class="main__data--page-num"> {{ tld_records_curr_page|add:'-1' }} </a> 
+          {% endif %}
+          {% if tld_records_curr_page > 0 %}
+            <a href="{% url 'frontend:simple-admin' %}?tldpg={{ tld_records_curr_page|add:'-1' }}" class="main__data--page-num"> {{ tld_records_curr_page }} </a>
+          {% endif %}
+          {# CURRENT PAGE #}
+            <a class="main__data--page-num scale-txt"> {{ tld_records_curr_page|add:'1' }} </a> 
+          {# CURRENT PAGE #}
+          {% if tld_records_curr_page|add:'1' <= tld_records_total_pages %} 
+            <a href="{% url 'frontend:simple-admin' %}?tldpg={{ tld_records_curr_page|add:'1' }}" class="main__data--page-num"> {{ tld_records_curr_page|add:'2' }} </a> 
+          {% endif %}
+          {% if tld_records_curr_page|add:'2' <= tld_records_total_pages %} 
+            <a href="{% url 'frontend:simple-admin' %}?tldpg={{ tld_records_curr_page|add:'2' }}" class="main__data--page-num"> {{ tld_records_curr_page|add:'3' }} </a> 
+          {% endif %}
+          {% if tld_records_curr_page < tld_records_total_pages %} 
+            <a href="{% url 'frontend:simple-admin' %}?tldpg={{ tld_records_curr_page|add:'1' }}" class="main__data--page-num">Next</a> 
+          {% endif %}
+        </div>
+
+        <div class="main__data--mass-action">
+          <label for="tld-record-action-dropdown" class="main__data--drop-down">
+            Action:
+          </label>
+          <select id="tld-record-action-dropdown">
+            <option value="">-------------</option>
+            <option value="delete-tld-records">Delete Records</option>
+            <option value="tld-toggle-intervention">Toggle Intervention</option>
+            <option value="tld-toggle-collect-links">Toggle Collect Links</option>
+          </select>
+          <div class="main__data--mass-action-submit">
+            Submit
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main__data ilblock" id="daily-intervention-counts">
+      <div class="main__data--header"><h1 class="main__data--header-top">Daily Intervention Counts</h1></div>
+      <div class="main__data--row dark-row label-row">
+        <div class="main__data--col c4 select"><strong>Select</strong></div>
+        <div class="main__data--col c8"><strong>Date</strong></div>
+        <div class="main__data--col c10"><strong>TLD</strong></div>
+        <div class="main__data--col c8"><strong>Visits</strong></div>
+        <div class="main__data--col c5"><strong>Expand</strong></div>
+      </div>
+      {% for counter_obj in intervention_counts_list %}
+        <div class="main__data--row {% cycle '' 'dark-row' %}">
+          <div class="main__data--col c4"><input type="checkbox" recordId="{{ counter_obj.id }}" ></div>
+          <div class="main__data--col c8">{{ counter_obj.date|date:"n/j" }}</div>
+          <div class="main__data--col c10 fl-end clip">{% if counter_obj.tld_record %} {{ counter_obj.tld_record.tld }} {% else %} N/A {% endif %}</div>
+          <div class="main__data--col c8">{{ counter_obj.visit_count }}</div>
+          <div class="main__data--col c5"><img class="ico exp-btn" src="{% static 'img/plus.png' %}"></div>
+        </div>
+      {% empty %}
+        <div class="main__data--footer"><strong>No Daily Intervention Counts</strong></div>
+      {% endfor %}
+      <div class="main__data--page-holder">
+        <div class="main__data--pages">
+          {% if intervention_counts_curr_page > 0 %} 
+            <a href="{% url 'frontend:simple-admin' %}?intpg={{ intervention_counts_curr_page|add:'-1' }}" class="main__data--page-num">Previous</a> 
+          {% endif %}
+          {% if intervention_counts_curr_page > 1  %} 
+            <a href="{% url 'frontend:simple-admin' %}?intpg={{ intervention_counts_curr_page|add:'-2' }}" class="main__data--page-num"> {{ intervention_counts_curr_page|add:'-1' }} </a> 
+          {% endif %}
+          {% if intervention_counts_curr_page > 0 %}
+            <a href="{% url 'frontend:simple-admin' %}?intpg={{ intervention_counts_curr_page|add:'-1' }}" class="main__data--page-num"> {{ intervention_counts_curr_page }} </a>
+          {% endif %}
+          {# CURRENT PAGE #}
+            <a class="main__data--page-num scale-txt"> {{ intervention_counts_curr_page|add:'1' }} </a> 
+          {# CURRENT PAGE #}
+          {% if intervention_counts_curr_page|add:'1' <= intervention_counts_total_pages %} 
+            <a href="{% url 'frontend:simple-admin' %}?intpg={{ intervention_counts_curr_page|add:'1' }}" class="main__data--page-num"> {{ intervention_counts_curr_page|add:'2' }} </a> 
+          {% endif %}
+          {% if intervention_counts_curr_page|add:'2' <= intervention_counts_total_pages %} 
+            <a href="{% url 'frontend:simple-admin' %}?intpg={{ intervention_counts_curr_page|add:'2' }}" class="main__data--page-num"> {{ intervention_counts_curr_page|add:'3' }} </a> 
+          {% endif %}
+          {% if intervention_counts_curr_page < intervention_counts_total_pages %} 
+            <a href="{% url 'frontend:simple-admin' %}?intpg={{ intervention_counts_curr_page|add:'1' }}" class="main__data--page-num">Next</a> 
+          {% endif %}
+        </div>
+
+        <div class="main__data--mass-action">
+          <label for="intervention-count-action-dropdown" class="main__data--drop-down">
+            Action:
+          </label>
+          <select id="intervention-count-action-dropdown">
+            <option value="">-------------</option>
+            <option value="delete-intervention-counts">Delete Counts</option>
+          </select>
+          <div class="main__data--mass-action-submit">
+            Submit
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main__data" id="visible-link-records">
+    <div class="main__data--header"><h1 class="main__data--header-top">Visible Link Records</h1></div>
+    <div class="main__data--row dark-row label-row">
+      <div class="main__data--col c4 select"><strong>Select</strong></div>
+      <div class="main__data--col c8"><strong>Date</strong></div>
+      <div class="main__data--col c8"><strong>Parent TLD</strong></div>
+      <div class="main__data--col c28 fl-end"><strong>Linked URL</strong></div>
+      <div class="main__data--col c5"><strong>Expand</strong></div>
+    </div>
+    {% for vis_record_obj in visible_records_list %}
+      <div class="main__data--row {% cycle '' 'dark-row' %}">
+        <div class="main__data--col c4"><input type="checkbox" recordId="{{ vis_record_obj.id }}" ></div>
+        <div class="main__data--col c8">{{ vis_record_obj.visible_timestamp|date:"g:iA, n/j" }}</div>
+        <div class="main__data--col c8">{% if vis_record_obj.parent_tld %} {{ vis_record_obj.parent_tld.tld }} {% else %} N/A {% endif %}</div>
+        <div class="main__data--col c28 fl-end clip">{{ vis_record_obj.linked_url }}</div>
+        <div class="main__data--col c5"><img class="ico exp-btn" src="{% static 'img/plus.png' %}"></div>
+      </div>
+    {% empty %}
+      <div class="main__data--footer"><strong>No Visible Link Records</strong></div>
+    {% endfor %}
+    <div class="main__data--page-holder">
+      <div class="main__data--pages">
+        {% if visible_records_curr_page > 0 %} 
+          <a href="{% url 'frontend:simple-admin' %}?vispg={{ visible_records_curr_page|add:'-1' }}" class="main__data--page-num">Previous</a> 
+        {% endif %}
+        {% if visible_records_curr_page > 1  %} 
+          <a href="{% url 'frontend:simple-admin' %}?vispg={{ visible_records_curr_page|add:'-2' }}" class="main__data--page-num"> {{ visible_records_curr_page|add:'-1' }} </a> 
+        {% endif %}
+        {% if visible_records_curr_page > 0 %}
+          <a href="{% url 'frontend:simple-admin' %}?vispg={{ visible_records_curr_page|add:'-1' }}" class="main__data--page-num"> {{ visible_records_curr_page }} </a>
+        {% endif %}
+        {# CURRENT PAGE #}
+          <a class="main__data--page-num scale-txt"> {{ visible_records_curr_page|add:'1' }} </a> 
+        {# CURRENT PAGE #}
+        {% if visible_records_curr_page|add:'1' <= visible_records_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?vispg={{ visible_records_curr_page|add:'1' }}" class="main__data--page-num"> {{ visible_records_curr_page|add:'2' }} </a> 
+        {% endif %}
+        {% if visible_records_curr_page|add:'2' <= visible_records_total_pages%} 
+          <a href="{% url 'frontend:simple-admin' %}?vispg={{ visible_records_curr_page|add:'2' }}" class="main__data--page-num"> {{ visible_records_curr_page|add:'3' }} </a> 
+        {% endif %}
+        {% if visible_records_curr_page < visible_records_total_pages %} 
+          <a href="{% url 'frontend:simple-admin' %}?vispg={{ visible_records_curr_page|add:'1' }}" class="main__data--page-num">Next</a> 
+        {% endif %}
+      </div>
+
+      <div class="main__data--mass-action">
+        <label for="visible-link-record-action-dropdown" class="main__data--drop-down">
+          Action:
+        </label>
+        <select id="visible-link-record-action-dropdown">
+          <option value="">-------------</option>
+          <option value="delete-visible-link-records">Delete Records</option>
+        </select>
+        <div class="main__data--mass-action-submit">
+          Submit
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form class="hidden" id="form-json-data-submit" method="POST" action="{% url 'frontend:sa-mass-action' %}">
+    {{ json_data_submit_form }}
+    {% csrf_token %}
+  </form>
+
+  <div class="main__spacer"></div>
+
+{% endblock main_body %}
+
+{% block page_scripts %}
+  <script src="{% static 'js/simple_admin.js' %}" defer></script>
+{% endblock page_scripts %}

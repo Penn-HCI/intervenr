@@ -1,0 +1,345 @@
+/*
+  FORMS CSS File.
+  Defines specific styling for forms, which are used in the onboarding flow, surveys, and
+  offboarding flows. Consistent styling across all areas.
+*/
+
+
+/*
+  Form Variables
+  Some color and other variables for the form.
+*/
+
+.dashboard-pagination li {
+  display: inline;
+  list-style-type: none;
+}
+
+.dashboard-pagination a {
+  width: 115px;
+  height: 25px;
+  background: #808080;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  line-height: 25px;
+}
+
+.dashboard-pagination a:hover {
+  background: #424242;
+}
+
+.main__form {
+  --red: #DC332E;
+  --white-bg: white;
+  --white-fg: whitesmoke;
+  --green: #04b94d;
+  --green-hv: #00a241;
+  --blue: #3397C1;
+  --ts-dur: 300ms;
+  --gray-ds: #a9a9a9;
+}
+
+
+/*
+  Form Setup
+  Basic form and text setup.
+*/
+.main__form {
+  margin: 1rem 0;
+  /* font-weight: bold; */
+  font-size: 1.2rem;
+}
+
+.main__form a {
+  text-decoration: none;
+}
+
+.main__form p {
+  padding: 0;
+  /* display: flex; */
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.main__form ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.main__form li {
+  margin: 0.3rem 0;
+}
+
+.main__form label {
+  margin: 0.5rem 0 0;
+}
+
+.main__form fieldset {
+  margin: 1rem 0;
+}
+
+.main__form--action {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.main__form .main__button {
+  margin-right: 5vw;
+}
+
+.main__form .main__button.main-center {
+  margin: 0 auto;
+}
+
+.warning-img {
+  display: block;
+  height: 28rem;
+  margin: 0 auto;
+}
+
+.registered-img {
+  display: block;
+  height: 12rem;
+  margin: 0 auto;
+}
+
+.load-img {
+  margin: 0 auto;
+  height: auto;
+}
+
+.asteriskField {
+  display: none;
+}
+
+.main__form .form-group {
+  margin: 0.5rem 0.5rem;
+}
+
+
+/*
+  Field Setup
+  Settings for each individual field type used. Some cool animations are also included.
+*/
+.main__form input[type=checkbox] {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  height: 1rem;
+  width: 1rem;
+  margin: 0 1.2vw;
+  background-color: var(--white-bg);
+  border: 0.06rem solid var(--blue);
+  border-radius: 0.15rem;
+  transition: background-color var(--ts-dur), border-radius var(--ts-dur), border var(--ts-dur), height var(--ts-dur), width var(--ts-dur), transform var(--ts-dur);
+}
+
+.main__form input[type=checkbox]:focus, .main__form input[type=checkbox]:hover, .main__form input[type=checkbox]:active {
+  border: 0.08rem solid var(--blue);
+}
+
+.main__form input[type=checkbox]:checked {
+  height: 1.2rem;
+  width: 0.7rem;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 0;
+  border: 0.2rem solid var(--green);
+  border-top-width: 0;
+  border-left-width: 0;
+  transform: translate(0.4vw, -0.25rem) rotate(45deg);
+}
+
+.main__form input[type=checkbox]:checked:focus, .main__form input[type=checkbox]:checked:hover, .main__form input[type=checkbox]:checked:active {
+  border: 0.22rem solid var(--green-hv);
+  border-top-width: 0;
+  border-left-width: 0;
+}
+
+.main__form input[type=radio] {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  height: 1rem;
+  width: 1rem;
+  margin: 0 1.2vw;
+  background-color: var(--white-bg);
+  border: 0.06rem solid var(--blue);
+  border-radius: 1rem;
+  transition: background-color var(--ts-dur), border-radius var(--ts-dur), border var(--ts-dur), height var(--ts-dur), width var(--ts-dur), transform var(--ts-dur);
+}
+
+.main__form input[type=radio]:focus, .main__form input[type=radio]:hover, .main__form input[type=radio]:active {
+  border: 0.08rem solid var(--blue);
+}
+
+.main__form input[type=radio]:checked {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 1rem;
+  background-color: var(--green);
+  border: 0.2rem solid var(--white-bg);
+}
+
+.main__form input[type=radio]:checked:focus, .main__form input[type=radio]:checked:hover, .main__form input[type=radio]:checked:active {
+  background-color: var(--green-hv);
+  transform: scale(1.2);
+}
+
+.main__form input[type=text], .main__form input[type=email], .main__form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  border: 0.05rem solid var(--blue);
+  margin: 0.5rem 1.5rem 0;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background-color: var(--white-bg);
+  transition: border var(--ts-dur);
+  text-align: center;
+  font: 0.9rem "Lato";
+}
+
+.main__form input[disabled] {
+  color: var(--gray-ds);
+}
+
+.main__form input[disabled]:checked {
+  background-color: var(--gray-ds);
+}
+
+.main__form input[disabled]:checked:hover {
+  background-color: var(--gray-ds);
+}
+
+.main__form input[type=checkbox][disabled]:checked {
+  background-color: rgba(0, 0, 0, 0);
+  border-color: var(--gray-ds);
+}
+
+.main__form input[disabled].disabled-btn {
+  color: var(--white-fg);
+}
+
+
+/*
+  Form Utility Class
+  Some classes that can help fix minor form appearance problems.
+*/
+.clean-style {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+}
+
+ul.errorlist {
+  margin-bottom: -1.2rem;
+  font-size: 1.2rem;
+  font-weight: bolder;
+  color: var(--red);
+}
+
+.hidden {
+  display: none;
+}
+
+.survey_ad_img {
+  max-height: 300px;
+  max-width: 800px;
+  background-color: #eee;
+}
+
+.form_indent {
+  margin-left: 50px;
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+.pagination {
+  font-size: 12px;
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  background-color: #eee;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: var(--nav-bg);
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.holistic_ads {
+  display: block;
+  overflow: auto;
+  background-color: #eee;
+  color: #4C4D4C;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  margin: 0;
+  padding: 10px;
+}
+
+.holistic_ad {
+  float: left; 
+  width: 100px; 
+  height: 100px; 
+  padding: 10px;
+}
+
+/* 
+  Tooltip Class
+  Classes that allow for tooltips.
+*/
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 140px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

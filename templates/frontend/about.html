@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block tab_title %} About | Intervenr {% endblock tab_title %}
+
+{% block header_title %}
+  <h1 class="header--title header-center">About Intervenr</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+  <h1 class="main__header main-center">What is Intervenr?</h1>
+  <div class="main__text">
+    The Intervenr platform uses a Chrome browser extension designed to help researchers study the media that people are exposed to online. 
+  </div>
+  <h1 class="main__header main-center">How does it work?</h1>
+  <div class="main__text">
+    Intervenr runs as an extension in your Chrome browser. 
+    When you <a href="{% url 'onboard:index' %}">join</a>, we’ll walk you through creating your account and installing the browser extension, which will collect data from your web browser for a limited period of time, and may show you notifications in your browser. 
+    At certain points during the study period, we will ask you to answer a short survey, and at the end of the data collection period, you will be compensated with payment on Prolific. 
+  </div>
+  <h1 class="main__header main-center">Is my data safe using Intervenr?</h1>
+  <div class="main__text">
+    Keeping your data safe is our top priority; your participation will be kept confidential and your data will be secure and private. 
+    For more information, see our <a href="{% url 'frontend:privacy' %}">Privacy page</a>.
+  </div>
+  <h1 class="main__header main-center">Who are we?</h1>
+  <div class="main__text">
+    We are a group of researchers from University of Pennsylvania's Computer and Information Science Department and Annenberg School for Communication, 
+    studying the impact of digital media on people and society. 
+    Our team lead is PhD student <a href="mailto:stephtw@seas.upenn.edu">Stephanie Wang</a>, and the group’s PI is <a href="metaxa.net">Professor Danaë Metaxa</a>. 
+    Current development is led by PhD student <a href="mailto:stephtw@seas.upenn.edu">Stephanie Wang</a> and previous development was led by Stanford PhD student <a href="https://michelle123lam.github.io/">Michelle Lam</a> and supported by Rachit Gupta, Megan Mou, and Poonam Sahoo. Stanford undergrads Colin Kalicki, Ayush Pandit, and Melanie Zhou were previous developers on this project.
+  </div>
+  <h1 class="main__header main-center">Troubleshooting the Extension?</h1>
+  <div class="main__text">
+    Please check our <a href="https://docs.google.com/document/d/1SrIH03VseELsVfVWmORgXL7gNxd7UpK2wgr00Ez-jcg/edit?usp=sharing" target="_blank">FAQ page</a> for help on commonly asked questions about installing and keeping the extension running during the study. You may also reference the <a href="https://drive.google.com/file/d/1fDrx3RH6vzsPMGitAoL39DM8nLSs_fld/view?usp=drive_link" target="_blank">Onboarding document</a> for steps you took to download the extension.
+  </div>
+  <h1 class="main__header main-center">Any other questions?</h1>
+  <div class="main__text">
+    Contact us! We can be reached by email at <a href="mailto:intervenr-research-study@seas.upenn.edu">intervenr-research-study@seas.upenn.edu</a>. 
+  </div>
+{% endblock main_body %}
+

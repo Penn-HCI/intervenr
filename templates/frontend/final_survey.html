@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% if experiment_member %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endif %}
+{% endblock styles %}
+
+{% block tab_title %} Intervenr Ads: Final Survey{% endblock tab_title %}
+
+{% block header_title %}
+  <h1 class="header--title header-center">Final Survey</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+    {% if SURVEY_ALERT %} 
+        <div class="main__alert main-center">{{ SURVEY_ALERT }}</div>
+    {% endif %} 
+    {% if SURVEY_WARN %} 
+        <div class="main__alert main-center">{{ SURVEY_WARN }}</div>
+    {% endif %} 
+
+    {% if not SURVEY_ALERT %} 
+        <div class="main__spacer"></div>
+        <div class="main__text"></div>
+                
+        <form class="main__form" action="{% url 'frontend:final-survey' %}" method="POST">
+            {% csrf_token %}
+
+            <div>
+                <div class="pagination" id="pag_section">
+                    {% for section in sections %}
+                    <a onclick="all_sections_select('{{forloop.counter}}')" id="paginate_section_{{forloop.counter}}">{{forloop.counter}}: {{section}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div>
+                <!-- SECTION 1-->
+                <div id="all_section_1">
+                    <h2>Section 1: {{sections.0}}</h2>
+                    <p>{{descriptions.0}}</p>
+
+                    <div class="form_indent">
+                        <div class="holistic_ads">
+                            {% for ad_url in holistic_ad_urls %}
+                                <div class="holistic_ad">
+                                    <img src={{ad_url}} style="max-width: 100px; max-height: 100px;" onerror="this.style.display='none'">
+                                </div>
+                            {% endfor%}
+                        </div>
+                        <div>
+                            {{ form_ads_holistic.as_p }}
+                        </div>
+                        
+                        {% if not block_next_step %}
+                        <a class="main__button clean-style" onclick="section1_next()">Next question</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SECTION 2 -->
+                <div id="all_section_2">
+                    <h2>Section 2: {{sections.1}}</h2>
+                    <p>{{descriptions.1}}</p>
+
+                    <div>
+                        <div class="pagination" id="pag_section2">
+                            {% for ind in form_ads_sample_inds %}
+                            <a onclick="section2_select('{{ind}}')" id="paginate_section2_{{ind}}">Q{{ind}}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form_indent">
+                        <!-- Display Form -->
+                        {% for field in form_ads_sample %}
+                            <div id="section2_{{forloop.counter0}}" class="">
+                                <label class="mylabel">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                        {% if not block_next_step %}
+                        <a class="main__button clean-style" onclick="section2_next()">Next question</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SECTION 3 -->
+                <div id="all_section_3">
+                    <h2>Section 3: {{sections.2}}</h2>
+                    <p>{{descriptions.2}}</p>
+
+                    <div class="form_indent">
+                        {{ form_study_exp.as_p }}
+
+                        {% if block_next_step %}
+                            <button class="main__button clean-style disabled-btn" type="submit" disabled>Submit</button>
+                        {% else %}
+                        <p>Please make sure that you have entered an answer for all survey questions; if not, the Submit button below will not work.</p>
+                        <button class="main__button clean-style" type="submit">Submit</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    {% endif %} 
+{% endblock main_body %}
+
+{% block page_scripts %}
+    <script>
+        // Variables
+        let form_ads_sample_inds = {{form_ads_sample_inds | safe}};
+
+        // Custom script to add text entry
+        opts = document.querySelectorAll("input[type=checkbox][value=textEntry]")
+        opts.forEach(function(opt) {
+            let cur_id = opt.id + "_input";
+            let cur_name = opt.name + "_input";
+            opt.parentElement.innerHTML += `<input type="text" id="${cur_id}" name="${cur_name}" />`;
+        })
+
+        // Handle next button 
+        function section1_next() {
+            section2_select(1); // set to first question in section
+            all_sections_select(2); // go to next section
+        }
+
+        function section2_next() {
+            if (section2_active < form_ads_sample_inds.length) {
+                section2_select(section2_active + 1); // select next page
+            } else {
+                all_sections_select(3); // go to next section
+            }
+        }
+
+
+        // Handle pagination
+        window.addEventListener('load', () => {
+            // Hide section elements
+            // Section 2
+            let section2_elems = document.querySelectorAll('[id^="section2_"]');
+            for (let i = 0; i < section2_elems.length; i++) {
+                section2_elems[i].style.display = "none";
+            }
+
+            // Section 3
+            let section3_elems = document.querySelectorAll('[id^="section3_"]');
+            for (let i = 0; i < section3_elems.length; i++) {
+                section3_elems[i].style.display = "none";
+            }
+
+            // Set first question visible
+            section2_select(section2_active); // show initial question
+            all_sections_select(section_active);
+        });
+
+        // Set active section
+        let section_active = 1;
+        function all_sections_select(new_ind) {
+            section_active = parseInt(new_ind);
+
+            // Hide all elements
+            let all_section_elems = document.querySelectorAll('[id^="all_section_"]');
+            for (let i = 0; i < all_section_elems.length; i++) {
+                all_section_elems[i].style.display = "none";
+            }
+
+            // Display selected item
+            all_section_elems[section_active - 1].style.display = "initial";
+
+            // Highlight page icon
+            page_button_id = "paginate_section_" + (section_active);
+            let page_button = document.getElementById(page_button_id);
+            let pagination_section = document.getElementById("pag_section");
+            var current = pagination_section.getElementsByClassName("active");
+            if (current.length > 0) {
+                current[0].className = current[0].className.replace(" active", "");
+            }
+            page_button.className += " active";
+            page_button.scrollIntoView();
+        }
+
+        // Section 2: set active form question
+        let section2_active = 1;
+        function section2_select(new_ind) {
+            n_fields_per_ad = 5
+            section2_active = parseInt(new_ind);
+            let active_ind_start = (section2_active - 1) * n_fields_per_ad;
+            let active_ind_end = active_ind_start + (n_fields_per_ad - 1);
+
+            // Hide all elements
+            let section2_elems = document.querySelectorAll('[id^="section2_"]');
+            for (let i = 0; i < section2_elems.length; i++) {
+                section2_elems[i].style.display = "none";
+            }
+
+            // Display selected item
+            for (let i = active_ind_start; i <= active_ind_end; i++) {
+                section2_elems[i].style.display = "initial";
+            }
+
+            // Highlight page icon
+            page_button_id = "paginate_section2_" + section2_active;
+            let page_button = document.getElementById(page_button_id);
+            let pagination_section = document.getElementById("pag_section2");
+            var current = pagination_section.getElementsByClassName("active");
+            if (current.length > 0) {
+                current[0].className = current[0].className.replace(" active", "");
+            }
+            page_button.className += " active";
+            page_button.scrollIntoView();
+        }
+
+        
+    </script>
+{% endblock page_scripts %}

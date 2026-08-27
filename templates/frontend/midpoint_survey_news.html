@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% if experiment_member %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endif %}
+{% endblock styles %}
+
+{% block tab_title %} Intervenr News: Midpoint Survey{% endblock tab_title %}
+
+{% block header_title %}
+  <h1 class="header--title header-center">Midpoint Survey</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+    {% if SURVEY_ALERT %}
+        <div class="main__alert main-center">{{ SURVEY_ALERT }}</div>
+    {% endif %}
+    {% if SURVEY_WARN %}
+        <div class="main__alert main-center">{{ SURVEY_WARN }}</div>
+    {% endif %}
+
+    {% if not SURVEY_ALERT %}
+    <div class="main__spacer"></div>
+    <div class="main__text">
+        Please fill out this brief midpoint survey (which should take about 1-2 minutes). After this step, you will continue to the second part of the study.
+    </div>
+
+    <form class="main__form" action="{% url 'frontend:midpoint-survey' %}" method="POST">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        {% crispy form_news %}
+
+        <div class="main__form--action">
+<!--            {% if show_prev_step %}-->
+<!--            <a href="{% url form_url.previous %}">-->
+<!--                <div class="main__button blue-btn">-->
+<!--                    <div class="main__button&#45;&#45;text">Back</div>-->
+<!--                </div>-->
+<!--            </a>-->
+<!--            {% endif %}-->
+
+            {% if block_next_step %}
+                <button class="main__button clean-style disabled-btn" type="submit" disabled>Next</button>
+            {% else %}
+                <button class="main__button clean-style" type="submit">Submit</button>
+            {% endif %}
+        </div>
+    </form>
+    {% endif %}
+{% endblock main_body %}
+{% block page_scripts %}
+    <script>
+        for(i = 1; i < 5; i++){
+            document.getElementById(`myRange${i}`).insertAdjacentHTML('beforebegin',
+            '<small class="form-text text-muted">Extremely liberal</small>');
+            document.getElementById(`myRange${i}`).insertAdjacentHTML('afterend',
+            '<small class="form-text text-muted">Extremely conservative</small>');
+    }
+    </script>
+{% endblock page_scripts %}

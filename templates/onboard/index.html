@@ -1,0 +1,17 @@
+{% extends "onboard/base.html" %}
+{% load static %}
+
+{% block tab_title %} Join | Intervenr {% endblock tab_title %}
+
+{% block onboard_flow_title %} {{page_title}} {% endblock onboard_flow_title %}
+
+{% block main_text %}
+  {% if not ONBOARDING_CLOSED %}
+  <div class="main__text">
+    <strong>
+      If you agree to participate, please click "Next". If you do not, please exit this webpage and do not continue any further.
+    </strong>
+    On the next page, you'll create an account with Intervenr using a Google login for security. Please select whichever Google account you'd like to use to log into Intervenr. <strong>We do not collect your name or email address associated to this Google account.</strong>
+  </div>
+  {% endif %} 
+{% endblock main_text %}

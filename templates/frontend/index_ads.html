@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% if experiment_member %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/my_data_ads.css' %}">
+{% endif %}
+{% endblock styles %}
+
+{% block tab_title %} Intervenr Ads {% endblock tab_title %}
+
+{% block header_title %}
+{% if not experiment_member %}
+<h1 class="header--title header-center">Welcome to Intervenr Ads</h1>
+{% else %}
+<h1 class="header--title header-center">Welcome </h1>
+{% endif %}
+{% endblock header_title %}
+
+{% block main_body %}
+{# USER THAT IS NOT LOGGED IN #}
+{% if not experiment_member %}
+<h1 class="main__header main-center">
+  Want to help researchers better understand online advertising? You can join us in three easy steps.
+</h1>
+<div class="main__list">
+  <div class="main__list--number">1</div>
+  <div class="main__list--label">
+    <div class="main__list--label-header">Sign up for the waitlist</div>
+    <div class="main__list--label-text">
+      First, you'll sign up to join the waitlist by completing a brief background survey so that we can select a diverse pool of participants. Please note that you must be at least 18 years or older, have a Google account, and use Google Chrome as your main browser in order to participate.
+    </div>
+  </div>
+</div>
+<div class="main__list">
+  <div class="main__list--number">2</div>
+  <div class="main__list--label">
+    <div class="main__list--label-header">Onboard to the study</div>
+    <div class="main__list--label-text">
+      Second, if you are selected to participate in the study, we will send you instructions to onboard you to the study. In this phase, you will install the Intervenr Chrome extension; you must have access to Chrome
+      you must install the Intervenr Extension. In order to install the Intervenr Extension, you must again have access to (and primarily use) Google Chrome as your web browser. After you have finished installing and registering the extension, you must continue to use the Chrome browser for the duration of the study.
+    </div>
+  </div>
+</div>
+<div class="main__list">
+  <div class="main__list--number">3</div>
+  <div class="main__list--label">
+    <div class="main__list--label-header">Participate in the study</div>
+    <div class="main__list--label-text">
+      After creating an account and activating the Intervenr Chrome extension, you will then be fully enrolled in the study. During the study period, you will be asked to complete a midpoint and final survey. Upon completion of the study period and both surveys, you will receive your study compensation.
+    </div>
+  </div>
+</div>
+<a href="{% url 'onboard:index' %}" class="main__button main-center">
+  <div class="main__button--text">Sign Up</div>
+</a>
+<div class="main__spacer"></div>
+{# USER THAT IS LOGGED IN #}
+{% elif experiment_member and not experiment_member.offboard_user %}
+<h1 class="main__header disp-flex-center">Overview</h1>
+<div class="main__text">
+  {# Check if they're still enrolled in the study. #}
+  {% if not experiment_member.offboard_user %}
+  Thank you for participating in the Intervenr {{experiment_type}} Experiment. Have any questions, comments, or
+  concerns about your participation so far?
+  Please feel free to contact the <a href="mailto:intervenr_ads_study@cs.stanford.edu">Intervenr Team</a> and we will get back to
+  you as soon as possible.
+  {% else %}
+  Thank you for your participation in the Intervenr {{experiment_type}} Experiment. You have completed your
+  participation in the Intervenr {{experiment_type}} Study, which started on <strong>{{ study_start_date }}</strong>
+  and lasted for a total of <strong>{{ study_duration_days }}</strong> day{{ study_duration_days|pluralize }}. Now that
+  the study is over, your account and access to this site may
+  end. You should receive further communication from the Intervenr Team via your provided contact email about experiment
+  details and compensation. If you have any urgent questions,
+  comments, or concerns about the Intervenr Experiment or your participation, please contact the <a
+    href="mailto:intervenr_ads_study@cs.stanford.edu">Intervenr Team</a> and we will get back to you as soon as possible.
+  {% endif %}
+</div>
+<h1 class="main__header disp-flex-center">My Data</h1>
+<div class="main__text">
+  Manage your data here. You can select and delete any records that you would like to be removed from the Intervenr
+  Study. Note that all data used for the Intervenr Study will be
+  anonymized and aggregated before being accessed or analyzed by our research team.
+</div>
+
+
+<div class=".main__data">
+  <div class="main__data--header">
+    <h1 class="main__data--header-top">Ad Records</h1>
+  </div>
+  <div class="main__data--row dark-row label-row">
+    <div class="main__data--col c4"><strong>Delete</strong></div>
+    <div class="main__data--col c12"><strong>Date</strong></div>
+    <div class="main__data--col c12"><strong>Source Page<br>Domain</strong></div>
+    <div class="main__data--col c12"><strong>Source Page<br>Title</strong></div>
+    <div class="main__data--col c12"><strong>Ad count</strong></div>
+  </div>
+  {% for ad_obj in ad_records %}
+  <div class="main__data--row {% cycle '' 'dark-row' %}">
+    <div class="main__data--col c4 main__data--label-modify"><img class="ico" src="{% static 'img/remove.png' %}" src_page_url="{{ ad_obj.src_page_url }}" created_time__date="{{ ad_obj.created_time__date }}" created_time__hour="{{ ad_obj.created_time__hour }}" created_time__minute="{{ ad_obj.created_time__minute }}"></div>
+    <div class="main__data--col c12">{{ ad_obj.created_time__date }} {{ ad_obj.created_time__hour }}:{{ ad_obj.created_time__minute |stringformat:"02d"}}</div>
+    <div class="main__data--col c12">{{ ad_obj.page_domain }}</div>
+    <div class="main__data--col c12">{{ ad_obj.src_page_title }}</div>
+    <div class="main__data--col c12">{{ ad_obj.ad_count }}</div>
+  </div>
+  {% empty %}
+  <div class="main__data--footer"><strong>No Ad Records</strong></div>
+  {% endfor %}
+  <div class="main__data--page-holder">
+    <div class="main__data--pages">
+      {% if current_page_num > 0 %}
+      <a href="{% url 'frontend:index' %}?pg={{ current_page_num|add:'-1' }}" class="main__data--page-num">Previous</a>
+      {% endif %}
+      {% if current_page_num > 1 %}
+      <a href="{% url 'frontend:index' %}?pg={{ current_page_num|add:'-2' }}" class="main__data--page-num"> {{ current_page_num|add:'-1' }} </a>
+      {% endif %}
+      {% if current_page_num > 0 %}
+      <a href="{% url 'frontend:index' %}?pg={{ current_page_num|add:'-1' }}" class="main__data--page-num"> {{ current_page_num }} </a>
+      {% endif %}
+      {# CURRENT PAGE #}
+      <a class="main__data--page-num scale-txt"> {{ current_page_num|add:'1' }} </a>
+      {# CURRENT PAGE #}
+      {% if current_page_num|add:'1' <= total_ad_record_pages %}
+      <a href="{% url 'frontend:index' %}?pg={{ current_page_num|add:'1' }}" class="main__data--page-num"> {{ current_page_num|add:'2' }} </a>
+      {% endif %}
+      {% if current_page_num|add:'2' <= total_ad_record_pages %} 
+      <a href="{% url 'frontend:index' %}?pg={{ current_page_num|add:'2' }}" class="main__data--page-num"> {{ current_page_num|add:'3' }} </a>
+      {% endif %}
+      {% if current_page_num < total_ad_record_pages %} 
+      <a href="{% url 'frontend:index' %}?pg={{ current_page_num|add:'1' }}" class="main__data--page-num">Next</a>
+      {% endif %}
+    </div>
+  </div>
+  <form id="url_form" class="hidden" action="{% url 'frontend:user-del-ad' %}" method="POST">
+    {{ ad_form }}
+    {% csrf_token %}
+  </form>
+</div>
+
+
+<h1 class="main__header disp-flex-center">Settings</h1>
+<h2 class="main__header--section">Contact Email</h2>
+<div class="main__text mini-mg-btm">
+  Your current contact email is <strong>{{ contact_email }}</strong>.
+</div>
+<!-- <form id="contact_email_form" class="main__form hidden-slide" action="{% url 'frontend:user-update-email' %}"
+  method="POST">
+  {{ contact_email_form }}
+  {% csrf_token %}
+</form>
+<div id="contact_email_form_submit" class="main__button">Update Contact Email</div> -->
+<div class="main__spacer--sm"></div>
+<h2 class="main__header--section" id="reconnect_ext">Reconnect Intervenr Extension</h2>
+<div class="main__text">
+  Getting errors with your extension? If you have had to reinstall your extension or otherwise must reactivate your
+  extension, please confirm and reconnect your extension here.
+</div>
+<div participant_id="{{ participant_id }}" is_admin="{{is_admin}}" id="extension_connect_btn" class="main__button">Reconnect Extension</div>
+<div class="main__spacer--sm"></div>
+<h2 class="main__header--section">Stop Participation</h2>
+<div class="main__text">
+  You are free to end your participation in the Intervenr Study at any time. If you do decide to stop your
+  participation in the Intervenr Study, please contact the Intervenr Team, and we will assist you through the
+  offboarding process.
+  If you do decide to end your participation before the end of the study, you will receive partial compensation for
+  the time that you have spent participating in the experiment.
+  If you have any questions, comments, or concerns about this process, you can contact us about offboarding via the
+  button below.
+</div>
+<a class="main__button red-btn"
+  href="mailto:intervenr_ads_study@cs.stanford.edu?subject=Intervenr Study Offboarding Inquiry">Contact Intervenr Team</a>
+<div class="main__spacer--sm"></div>
+{% else %}
+<h1 class="main__header">You Have Been Offboarded</h1>
+<div class="main__text">
+  Thank you for your participation in the Intervenr study. We greatly appreciate your participation, and will follow
+  up with any final offboarding steps if we have not done so already. Once you've finished the offboarding process, no
+  further
+  actions are required from you. If you have any questions, comments, or concerns about your participation, or need
+  additional support, please contact the <a href="mailto:intervenr_ads_study@cs.stanford.edu">Intervenr Team</a>.
+</div>
+{% endif %}
+{% endblock main_body %}
+
+{% block page_scripts %}
+<script src="{% static 'js/my_data_ads.js' %}" defer></script>
+{% endblock page_scripts %}

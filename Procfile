@@ -1,0 +1,1 @@
+web: gunicorn intervenr.wsgi --preload --timeout 0 --log-file -

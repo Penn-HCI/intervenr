@@ -1,0 +1,37 @@
+{% extends "onboard/base.html" %}
+{% load static %}
+
+{% block tab_title %} Onboard | Intervenr {% endblock tab_title %}
+
+{% block onboard_flow_title %} 
+    Extension Installation
+{% endblock onboard_flow_title %}
+
+{% block consent %}
+{% endblock consent%}
+
+{% block main_text %}
+  <div class="main__spacer"></div>
+  <div class="main__text main-center txt-center">
+      <div>
+        Please follow the instructions in <a href="https://drive.google.com/file/d/1fDrx3RH6vzsPMGitAoL39DM8nLSs_fld/view?usp=sharing" target="_blank">this Onboarding PDF</a> (also displayed below) to install the Chrome Extension.
+
+        We recommend completing these steps in a <b>separate browser window or tab</b>!
+      </div>
+
+      <div class="main__spacer --sm"></div>
+
+      <div>
+        If you run into any issues, please check out this <a href="https://docs.google.com/document/d/1SrIH03VseELsVfVWmORgXL7gNxd7UpK2wgr00Ez-jcg/edit?usp=sharing" target="_blank">Frequently Asked Questions page</a> for help.
+      </div>
+
+      <div class="main__spacer --sm"></div>
+      
+      <!-- PDF -->
+      <div>
+        <iframe src="{% static 'intervenr-news-onboard.pdf' %}" width="100%" height="1000px"></iframe>
+      </div>
+      
+
+  </div>
+{% endblock main_text %}

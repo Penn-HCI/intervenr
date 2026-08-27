@@ -1,0 +1,272 @@
+/*
+  DATA CSS File.
+  Defines layout for data redaction page and user object management.
+*/
+
+
+/*
+  Font Information Setup.
+  Sets up the 2 main fonts used throughout the website, Lato for the body and Roboto
+  Slab for the titles.
+  See:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face
+*/
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("../fonts/Lato-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("../fonts/Lato-Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "RobotoSlab";
+  src: local("Roboto Slab"), local("RobotoSlab"), url("../fonts/RobotoSlab-Regular.ttf");
+}
+
+@font-face {
+  font-family: "RobotoSlab";
+  src: local("Roboto Slab"), local("RobotoSlab"), url("../fonts/RobotoSlab-Bold.ttf");
+  font-weight: bold;
+}
+
+
+/*
+  Variable Setup.
+  Sets up our color schemes for the websites. This is set across the entire document to make refactoring easy.
+  NOTE: We also have similar variable additions to other more specific CSS files.
+  This also sets up the transition length and scaling factor, and the fonts.
+  See: 
+  https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
+*/
+:root {
+  /* CSS Colors */
+  --body-text: #424242;
+  --blue-border: #049bcd;
+  --dark-row: rgba(63, 155, 205, 0.3);
+
+  /* BUTTON */
+  --red-btn: #DC332E;
+  --blue-btn: #049bcd;
+  --blue-btn-hv: #0087b4;
+  --white: white;
+  --btn-green: #04b94d;
+  --btn-green-hv: #00a241;
+
+  /* PAGE SELECTORS */
+  --page-select: rgb(45, 176, 219);
+  --page-select-hv: rgb(0, 127, 181);
+
+  /* Transition Values */
+  --ts-duration: 0.3s;
+  --ts-scale: 1.1;
+  --ts-fnt-scale: 1.1rem;
+
+  /* Fonts */
+  --body-fnt: "Lato", sans-serif;
+  --header-fnt: "RobotoSlab", monospace;
+  --header-fnt-sz: 2rem;
+  --data-header-fnt-sz: 2rem;
+  --data-fnt-sz: 1.2rem;
+}
+
+
+/*
+  Main Data Form
+  Sets everything up as a grid for injection of elements.
+*/
+.main__data {
+  margin: 2rem 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 3.5rem;
+  grid-auto-flow: column;
+}
+
+.main__data--header {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 6px solid var(--blue-border);
+}
+
+.main__data--header-top {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+  font: bold var(--data-header-fnt-sz) var(--header-fnt);
+}
+
+.main__data--footer {
+  grid-column: 1/2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0;
+  font: bold 1.6rem var(--body-fnt);
+  background-color: var(--dark-row);
+  border-radius: 0 0 10px 10px;
+}
+
+.main__data--row {
+  grid-column: 1/2;
+  display: grid;
+  padding: 0.5rem 0;
+  column-gap: 1rem;
+  grid-template-columns: 6rem 10rem 1fr 3rem;
+  grid-template-rows: 1fr;
+  align-items: center;
+  border-bottom: 1px solid var(--body-text);
+  font: var(--data-fnt-sz) var(--body-fnt);
+}
+
+.main__data--label-modify {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modify-confirm {
+  grid-column: 1/5;
+  grid-row: 2/3;
+  display: flex;
+  align-items: center;
+}
+
+.modify-confirm-txt {
+  font-weight: bold;
+  margin: 0 1rem;
+}
+
+.modify-confirm-btn {
+  display: inline-flex;
+  padding: 0.5rem 1rem;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+  color: var(--white);
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+.modify-confirm-btn:hover {
+  transform: scale(1.2);
+}
+
+.main__data--label-date {
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+
+.main__data--label-url {
+  display: flex;
+  align-items: center;
+  grid-column: 3/4;
+  grid-row: 1/2;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.main__data--label-expand {
+  grid-column: 4/5;
+  grid-row: 1/2;
+}
+
+.main__data--page-holder {
+  grid-column: 1/2;
+  margin: 2rem 0;
+  font: bold 1.1rem var(--body-fnt);
+}
+
+.main__data--pages {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  background-color: var(--page-select);
+  border-radius: 20px;
+}
+
+.main__data--page-num {
+  margin: 0 1rem;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--white);
+  transition: transform 0.3s;
+}
+
+.main__data--page-num:hover {
+  transform: scale(1.2);
+}
+
+
+/*
+  Utility Classes
+*/
+.clip-url {
+  overflow: hidden;
+  max-height: 1.5rem;
+  align-items: flex-start;
+}
+
+.unclip-url {
+  overflow: visible;
+  min-height: 2.5rem;
+  max-height: 100vh;
+  align-items: center;
+}
+
+.dark-row {
+  background-color: var(--dark-row);
+}
+
+.label-row {
+  border-bottom: 3px solid var(--blue-border);
+}
+
+.ico {
+  width: 1rem;
+  transition: transform 0.3s;
+}
+
+.ico:hover {
+  transform: scale(1.2);
+}
+
+.ico--click {
+  width: 1rem;
+  transform: scale(1.3) rotate(405deg);
+  transition: transform 0.3s;
+}
+
+.btn-red {
+  background-color: var(--red-btn);
+}
+
+.btn-blue {
+  background-color: var(--blue-btn);
+}
+
+.scale-txt {
+  transform: scale(1.2);
+}
+
+.hidden-slide {
+  margin: 0;
+  height: 0;
+  opacity: 0;
+  transition: margin 0.5s, height 0.5s;
+}
+
+.show-slide {
+  opacity: 1;
+  height: max-content;
+  transition: margin 0.5s, height 0.5s;
+}

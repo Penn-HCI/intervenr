@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block tab_title %} Sign Up | Intervenr {% endblock tab_title %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock styles %}
+
+{% block header_title %} 
+    <h1 class="header--title header-center">
+      {% block onboard_flow_title %} Participating in Intervenr {% endblock onboard_flow_title %}
+    </h1>
+{% endblock header_title %}
+
+{% block main_body %}
+    <div class="main__spacer"></div>
+    {% block pre_consent %}
+        {% if ONBOARDING_CLOSED %}
+        Thank you for your interest in our study! Unfortunately, as of July 17, 2022, we have ended participant onboarding and are not accepting new participants. 
+        {% endif %} 
+    {% endblock pre_consent %}
+
+    {% block consent %}
+        {% if not ONBOARDING_CLOSED %}
+        <div class="main__text">
+        <b>Thank you for your interest in our research project</b>. The purpose of this study is to learn about what kinds of online media people consume, and how changing the media to which they have access to affects them. If you decide to participate, we will ask you to install a Chrome extension called Intervenr for a limited amount of time ({{study_duration_days}} days), which will record selected content (images, text, or links) from sites you see on the web for the first half of the time, and afterwards will make some adjustment to this content you can see in your browser. <b>No effort will be required on your part other than this installation and three brief 10 minute surveys</b>.
+        </div>
+        <div class="main__text">
+        Only the research team will have access to your data, and any results will be reported in aggregate across many participants. Your personal data will be mapped to an de-identified ID, and will be destroyed following the experiment. For your privacy, you will also have the option to remove any content (images, text, or links) of your choice from the data collection such that the researchers cannot see what content you viewed. This can be done by selecting and deleting the content on your homepage on <a href="intervenr.stanford.edu">intervenr.stanford.edu</a>, or by contacting the researchers via email.
+        The possible risks of this study are minimal. Though we cannot promise you will receive any direct benefits from this study, your answers may help us learn more about how people consume online media.
+        Your part in this study will be handled in a confidential manner. Any reports or publications on this research will not identify you as being part of this study. 
+        </div>
+        <div class="main__text">
+        Participating in this research is up to you. If you begin the study, you may withdraw at any time, simply by uninstalling the extension. If you wish to withdraw, we would appreciate your following the instructions under the “Stop Participation” section of the Intervenr website before uninstalling the extension in order to send us feedback about why you are withdrawing. You also have the option to withdraw all data we collect from you at any time during the study.
+        </div>
+        <div class="main__text">
+        We expect the study to run for {{study_duration_days}} days, split into three phases of 1) onboarding/ installation, 2) midpoint survey, 3) final survey. Your active participation will be necessary to set up the tool at the beginning, and answer survey questions and uninstall the tool at the end. You will be compensated up to $5 for successful onboarding, and anticipate bonuses of up to $10 for further participation and completion of the midpoint and final surveys. 
+        </div>
+        <div class="main__text">
+        In the future, identifiers might be removed from identifiable private information and, after such removal, the information could be used for future research studies or distributed to another investigator for future research studies without additional informed consent from you.
+        If you have questions or would like to know more  you may contact the researchers at <a href="intervenr-research-study@seas.upenn.edu">intervenr-research-study@seas.upenn.edu</a>, the study lead Stephanie Wang at <a href="stephtw@seas.upenn.edu">stephtw@seas.upenn.edu</a>, or the PI Danaë Metaxa at <a href="metaxa@seas.upenn.edu">metaxa@seas.upenn.edu</a>.
+        If you have any concerns, complaints, or questions about the research or your rights as a participant, please contact the University of Pennsylvania IRB to speak to someone independent of the research team at (215) 898-2614, or email at <a href="mailto:PROVOST-IRB@pobox.upenn.edu">PROVOST-IRB@pobox.upenn.edu</a>.
+        </div>
+        <div class="main__text">
+        You may save or print a copy of this page for your records.
+        </div>
+        {% endif %} 
+    {% endblock consent%}
+
+    {% block main_text %}
+        {% if not ONBOARDING_CLOSED %}
+            <div class="main__spacer"></div>
+            <div class="main__text">
+                {% lorem 300 w %}
+            </div>
+        {% endif %} 
+    {% endblock main_text %}
+    {% block main_form %}
+        {% if not ONBOARDING_CLOSED %}
+            {% if NOT_CHROME_ERROR %}
+                <div class="main__alert main-center">
+                    {{ NOT_CHROME_ERROR }}
+                </div>
+            {% endif %}
+            {% if MOBILE_ERROR %}
+                <div class="main__alert main-center">
+                    {{ MOBILE_ERROR }}
+                </div>
+            {% endif %}
+            {% if ONBOARD_CODE_ERROR %}
+                <div class="main__alert main-center">{{ ONBOARD_CODE_ERROR }}</div>
+            {% endif %}
+            {% if ONBOARD_CODE_ALERT %}
+                <div class="main__alert main-center blue-alert">{{ ONBOARD_CODE_ALERT }}</div>
+            {% endif %}
+            
+            {% block main_form_extra_error %}
+            {% endblock main_form_extra_error %}
+            
+            <form class="main__form" action="{% url form_url.current %}" method="POST">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+                
+                {% block main_form_action %}
+                    <div class="main__form--action">
+                        {% if show_prev_step %}
+                            <a href="{% url form_url.previous %}">
+                                <div class="main__button blue-btn">
+                                    <div class="main__button--text">Back</div>
+                                </div>
+                            </a>
+                        {% endif %}
+                        {% if block_next_step %}
+                            <button class="main__button clean-style disabled-btn" type="submit" disabled>Error</button>
+                        {% else %}
+                            <button class="main__button clean-style" type="submit">Next</button>
+                        {% endif %}
+                    </div>
+                {% endblock main_form_action %}
+            </form>
+        {% endif %} 
+    {% endblock main_form %}
+{% endblock main_body %}

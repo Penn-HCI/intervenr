@@ -1,0 +1,20 @@
+{% extends "onboard/base.html" %}
+{% load static %}
+
+{% block tab_title %} Onboard | Intervenr {% endblock tab_title %}
+
+{% block onboard_flow_title %} Onboard to Intervenr {% endblock onboard_flow_title %}
+
+{% block pre_consent %}
+<div class="main__text">
+  <strong>The consent form that you agreed to when you joined from Prolific is included below:</strong>
+</div>
+{% endblock pre_consent %}
+
+{% block main_text %}
+  <div class="main__text">
+    <strong>
+      If you agree to participate, please click the "Next" button to begin the onboarding process. If you do not agree to participate, please exit this webpage and do not continue any further.
+    </strong>
+  </div>
+{% endblock main_text %}

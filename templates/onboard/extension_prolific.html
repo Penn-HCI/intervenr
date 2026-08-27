@@ -1,0 +1,52 @@
+{% extends "onboard/base.html" %}
+{% load static %}
+
+{% block tab_title %} Sign Up | Intervenr {% endblock tab_title %}
+
+{% block onboard_flow_title %} Register Extension {% endblock onboard_flow_title %}
+
+{% block consent %}
+{% endblock consent%}
+
+{% block main_text %}
+  <div class="main__spacer"></div>
+  <div class="main__text">
+    You're almost done! For our last step, we will verify that your extension has been installed.
+  </div>
+  <div class="main__text">
+    <strong>
+      Please note that you should see a confirmation message that the extension has detected this webpage after installing the extension
+      and reloading this page. If you do not see a confirmation, please contact the Intervenr Team.
+    </strong>
+  </div>
+  <div id="extension_page"></div>
+{% endblock main_text %}
+
+{% block main_form_action %}
+  {% if NOT_CHROME_ERROR or ONBOARD_CODE_ERROR %}
+    <img class="main__image warning-img" src="{% static 'img/warning.jpg' %}" error >
+  {% elif EXTENSION_REGISTERED %}
+    <img class="main__image registered-img" src="{% static 'img/checkmark.svg' %}" registered> 
+  {% else %}
+    <img class="main__image load-img" src="{% static 'img/loading.gif' %}" loading>
+  {% endif %}
+  <div class="main__spacer--sm"></div>
+
+  <div class="main__form--action">
+      {% if show_prev_step %}
+          <a href="{% url form_url.previous %}">
+              <div class="main__button blue-btn">
+                  <div class="main__button--text">Back</div>
+              </div>
+          </a>
+      {% endif %}
+      {% if block_next_step %}
+          <a class="main__button clean-style disabled-btn">Error</a>
+      {% else %}
+          {% if EXTENSION_REGISTERED %}
+            <a href="{% url form_url.link %}" class="main__button clean-style">Next</a>
+          {% endif %}
+      {% endif %}
+  </div>
+{% endblock main_form_action %}
+

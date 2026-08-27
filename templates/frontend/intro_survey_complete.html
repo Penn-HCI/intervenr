@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block tab_title %} Intervenr News: Introductory Survey Complete{% endblock tab_title %}
+
+{% block header_title %}
+    <h1 class="header--title header-center">Introductory Survey Complete</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+    <div class="main__spacer"></div>
+    <div class="main__text main-center txt-center">
+        {{ completion_message }}
+    </div>
+
+    <div class="main__form--action">
+        <a href="{% url link %}" class="main__button main-center clean-style">{{ completion_link_message }}</a>
+    </div>
+{% endblock main_body %}

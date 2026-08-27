@@ -1,0 +1,249 @@
+<html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/simple_admin.css' %}">
+
+<style>
+
+   .grid_wrapper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 250px;
+      grid-gap: 1rem;
+      grid-auto-flow: row;
+   }
+
+   .grid_img {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+   }
+
+
+   .image-list-small {
+      margin: 0 auto;
+      text-align: center;
+      max-width: 1170px;
+      padding: 0;
+   }
+
+   .image-list-small li {
+      display: inline-block;
+      width: 181px;
+      margin: 0 12px 30px;
+   }
+
+
+   .image-list-small li>a {
+      display: block;
+      text-decoration: none;
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 137px;
+      margin: 0;
+      padding: 0;
+      border: 4px solid #ffffff;
+      outline: 1px solid #d0d0d0;
+      box-shadow: 0 2px 1px #DDD;
+   }
+
+   .image-list-small .details {
+      margin-top: 13px;
+   }
+
+
+   .image-list-small .gridhover {
+      transform: scaleY(1);
+   }
+
+   .hoverText {
+      display: none;
+      position: absolute;
+      top: 10%;
+      font-size: 28px;
+      left: 15%;
+      color: #fff;
+      transition: all 0, 3s ease;
+   }
+
+   .hoverText:hover {
+      display: block;
+   }
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+
+</style>
+{% endblock styles %}
+
+
+{% block tab_title %} Analysis Dashboard | Intervenr {% endblock tab_title %}
+
+{% block header_title %}
+<h1 class="header--title header-center">Analysis Dashboard</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+<div class="main__spacer --sm"></div>
+
+<div class="dropdown">
+   <button class="dropbtn">Target Domain</button>
+   <div class="dropdown-content">
+     {% for opt in target_domain_opts %}
+     <a href="/analysis-dashboard?target_domain={{opt}}">{{ opt }}</a>
+     {% endfor %}
+   </div>
+ </div>
+
+ <div class="dropdown">
+   <button class="dropbtn">Page Domain</button>
+   <div class="dropdown-content">
+     {% for opt in page_domain_opts %}
+     <a href="/analysis-dashboard?page_domain={{opt}}">{{ opt }}</a>
+     {% endfor %}
+   </div>
+ </div>
+
+ <div class="dropdown">
+   <button class="dropbtn">Ad Type</button>
+   <div class="dropdown-content">
+     {% for type in content_type %}
+     <a href="/analysis-dashboard?content_type={{type}}">{{ type }}</a>
+     {% endfor %}
+   </div>
+ </div>
+
+ <div class="dropdown">
+   <button class="dropbtn">User</button>
+   <div class="dropdown-content">
+     {% for opt in user_opts %}
+     <a href="/analysis-dashboard?participant_id={{opt}}">{{ opt }}</a>
+     {% endfor %}
+   </div>
+ </div>
+
+ <div class="dropdown">
+   <button class="dropbtn">Phase</button>
+   <div class="dropdown-content">
+     {% for phase in phases %}
+     <a href="/analysis-dashboard?phase={{phase.0}}">{{ phase.1 }}</a>
+     {% endfor %}
+   </div>
+ </div>
+
+<body>
+   <main>
+      {% if view_type == "TABLE" %}
+      <h1>Table View</h1>
+      <table style="width:100%" border=1>
+         <thead>
+            <tr>
+               <th>Date</th>
+               <th>Image</th>
+               <th>User</th>
+               <th>Contains</th>
+               <th>Page Domain</th>
+               <th>Target Domain</th>
+               <th>Source Page Title</th>
+               <th>View Count</th>
+               <th>Click Count</th>
+               <th>Phase</th>
+            </tr>
+         </thead>
+
+         <tbody>
+            {% for ad in ads %}
+            <tr>
+               <td>{{ ad.created_time }}</td>
+               <td><img src="{{ ad.img_src }}" onerror="this.style.display='none'" class="grid_img"></td>
+               <td>{{ ad.participant_id }}</td>
+               <td>{{ ad.content_type }}</td>
+               <td>{{ ad.page_domain }}</td>
+               <td>{{ ad.target_domain }}</td>
+               <td>{{ ad.src_page_title }}</td>
+               <td>{{ ad.view_count }}</td>
+               <td>{{ ad.click_count }}</td>
+               <td>{{ ad.intervenr_ad_type }}</td>
+            </tr>
+            {% endfor %}
+         </tbody>
+
+      </table>
+      {% endif %}
+      <hr>
+      <hr />
+
+
+      {% if view_type == "GRID" %}
+      <h1>Grid View</h1>
+      <div>
+         <div class="grid_wrapper">
+            {% for ad in ads %}
+            <div class="grid_img">
+               <img src="{{ ad.img_src }}" onerror="this.style.display='none'">
+               <div class="details">
+                  <h3>{{ ad.page_domain }}</h3>
+                  <p class="image-author">{{ ad.target_domain }}</p>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </div>
+      {% endif %}
+
+
+   </main>
+</body>
+
+
+{% endblock main_body %}
+
+{% block page_scripts %}
+<script src="{% static 'js/simple_admin.js' %}" defer></script>
+{% endblock page_scripts %}
+
+</html>

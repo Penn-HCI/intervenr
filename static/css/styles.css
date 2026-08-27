@@ -1,0 +1,472 @@
+/*
+  BASE CSS File.
+  Defines font styles, navbar, color schemes, basic layout for website.
+*/
+
+
+/*
+  Font Information Setup.
+  Sets up the 2 main fonts used throughout the website, Lato for the body and Roboto
+  Slab for the titles.
+  See:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face
+*/
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("../fonts/Lato-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("../fonts/Lato-Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "RobotoSlab";
+  src: local("Roboto Slab"), local("RobotoSlab"), url("../fonts/RobotoSlab-Regular.ttf");
+}
+
+@font-face {
+  font-family: "RobotoSlab";
+  src: local("Roboto Slab"), local("RobotoSlab"), url("../fonts/RobotoSlab-Bold.ttf");
+  font-weight: bold;
+}
+
+
+/*
+  Variable Setup.
+  Sets up our color schemes for the websites. This is set across the entire document to make refactoring easy.
+  NOTE: We also have similar variable additions to other more specific CSS files.
+  This also sets up the transition length and scaling factor, and the fonts.
+  See: 
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
+*/
+:root {
+  /* CSS Colors */
+  --nav-bg: #011f5b;
+  --nav-fg: whitesmoke;
+  --body-bg: #eeeeee;
+  --body-fg: white;
+  --alert-bg: #DC332E;
+  --alert-fg: white;
+  --title-text: whitesmoke;
+  --body-text: #424242;
+  --footer-bg: #424242;
+  --footer-pg: whitesmoke;
+  --btn-green: #04b94d;
+  --btn-green-hv: #00a241;
+  --btn-blue: #049bcd;
+  --btn-blue-hv: #0080ab;
+  --btn-disable: gray;
+  --btn-red: #DC332E;
+  --btn-red-hv: #ab1813;
+
+  /* Transition Values */
+  --ts-duration: 0.3s;
+  --ts-scale: 1.1;
+  --ts-fnt-scale: 1.1rem;
+
+  /* Fonts */
+  --body-fnt: "Lato", sans-serif;
+  --header-fnt: "RobotoSlab", monospace;
+  --title-fnt-sz: 4rem;
+  --header-fnt-sz: 2rem;
+  --section-header-fnt-sz: 1.6rem;
+  --body-fnt-sz: 1.1rem;
+}
+
+
+/*
+  Main Body and Content Setup.
+  Sets up the body as a grid, with 3 columns and 2 rows.
+  See:
+    https://css-tricks.com/snippets/css/complete-guide-grid/
+*/
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 10vh 1fr;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  font: 1rem var(--body-fnt);
+  color: var(--body-text);
+  background-color: var(--body-bg);
+}
+
+
+/*
+  Navigation Bar and Setup
+  Outlines the layout of the navigation bar.
+*/
+.navbar {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 4rem 0.5rem 1.5rem;
+  background-color: var(--nav-bg);
+  color: var(--nav-fg);
+}
+
+/*
+  Navigation Bar Logo
+  Miniature Intervenr logo. This has a transition effect, scaling.
+*/
+.navbar__logo {
+  margin-right: auto;
+}
+
+.navbar__logo img {
+  margin-left: 0.5rem;
+  height: 6vh;
+  transition: transform var(--ts-duration);
+}
+
+.navbar__logo img:hover {
+  transform: scale(var(--ts-scale));
+}
+
+/*
+  Navigation Bar Element
+  Navigation bar logo text with 1.4rem sizing.
+*/
+.navbar__element {
+  margin: 0 1.5rem;
+  font: bold 1.5rem var(--header-fnt);
+  transition: transform var(--ts-duration);
+  text-decoration: none;
+  color: var(--nav-fg);
+}
+
+.navbar__element:hover {
+  transform: scale(var(--ts-scale));
+}
+
+
+/*
+  Rest of the Page Content
+  This includes the following organization:
+  div.content
+    div.header
+    div.main
+    div.footer
+*/
+.content {
+  grid-row: 2/3;
+  grid-column: 1/2;
+  display: grid;
+  grid-template-columns: 8vw 1fr 8vw;
+  grid-template-rows: 16vh 12vh 1fr 8vh;
+}
+
+
+/*
+  Header Content, both an image for the background, and the page title.
+  NOTE: Removing the rounded view, preserved here in case we want to bring it back.
+  Also the text has to be changed color to be light.
+  .header {
+    display: grid;
+    border-radius: 1rem 1rem 0 0;
+    padding: 2rem 2rem 0;
+    grid-row: 2/3;
+    grid-column: 2/3;
+    background-color: var(--body-fg);
+    z-index: 5;
+  }
+*/
+.header {
+  display: grid;
+  grid-row: 2/3;
+  grid-column: 2/3;
+  z-index: 5;
+}
+
+.header--img {
+  height: 100%;
+  width: 100%;
+  grid-row: 1/3;
+  grid-column: 1/4;
+  object-fit: cover;
+  object-position: center 60%;
+  z-index: 0;
+}
+
+.header--title {
+  align-self: end;
+  justify-self: start;
+  font: bold var(--title-fnt-sz) var(--header-fnt);
+  color: var(--title-text);
+  text-shadow: 1px 1.5px 3px black;
+  margin: 0;
+}
+
+
+/*
+  Main Content
+  This includes grid rows and columns, as well as background colors and fonts.
+*/
+.main {
+  padding: 0 4rem 1rem;
+  grid-row: 3/4;
+  grid-column: 2/3;
+  background-color: var(--body-fg);
+  z-index: 5;
+  font: var(--body-fnt-sz) var(--body-fnt);
+}
+
+.main__columns {
+  margin: 2rem auto;
+  width: 80%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: 1rem 2rem;
+  grid-auto-flow: column;
+  justify-items: center;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.main__header {
+  font: bold var(--header-fnt-sz) var(--header-fnt);
+  margin: 2rem 0 1rem;
+}
+
+.main__header--section {
+  font: bold var(--section-header-fnt-sz) var(--header-fnt);
+  margin: 1.5rem 0 1rem;
+}
+
+.main__image {
+  margin: 2rem auto;
+  height: 20vh;
+}
+
+.main__text {
+  margin-bottom: 2rem;
+}
+
+.main__list {
+  display: flex;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+}
+
+.main__list--number {
+  flex-shrink: 0;
+  margin-right: 2rem;
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  color: var(--title-text);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 100%;
+  background-color: var(--nav-bg);
+}
+
+.main__list--label {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.main__list--label-header {
+  font: bold 1.4rem var(--body-fnt);
+  margin-bottom: 0.5rem;
+}
+
+.main__list--label-text {
+  font: 1.1rem var(--body-fnt);
+}
+
+.main__button {
+  margin: 1rem 0;
+  border-radius: 1rem;
+  display: flex;
+  max-width: fit-content;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 3rem;
+  color: var(--body-fg);
+  background-color: var(--btn-green);
+  font: bold 1.2rem var(--body-fnt);
+  text-decoration: none;
+  border: none;
+  text-align: center;
+  transition: transform var(--ts-duration), background-color var(--ts-duration);
+}
+
+.main__button:hover {
+  background-color: var(--btn-green-hv);
+  transform: scale(var(--ts-scale));
+}
+
+.main__button--text {
+  font: bold 1.2rem var(--body-fnt);
+  text-decoration: none;
+  color: var(--body-fg);
+  transition: transform var(--ts-duration);
+}
+
+.main__button--text:hover {
+  transform: scale(var(--ts-scale));
+}
+
+.main__alert {
+  margin: 3rem 0 2rem;
+  width: 75%;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  background-color: var(--alert-bg);
+  color: var(--alert-fg);
+  font: bold 1.2rem var(--body-fnt);
+}
+
+.main__spacer {
+  height: 5vh;
+}
+
+.main__spacer--sm {
+  height: 1.5rem;
+}
+
+
+/*
+  Footer Content
+  This includes the copyright as well as the contact.
+*/
+.footer {
+  grid-row: 4/5;
+  grid-column: 1/4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--footer-bg);
+  font: 1rem var(--body-fnt);
+  color: var(--footer-pg);
+}
+
+.footer__copyright {
+  margin: 0 2rem;
+  font-weight: bold;
+}
+
+.footer__contact {
+  margin: 0 2rem;
+}
+
+.footer__contact a {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--footer-pg);
+  transition: font-size var(--ts-duration);
+}
+
+.footer__contact a:hover {
+  font-size: var(--ts-fnt-scale);
+}
+
+
+/*
+  Utility Classes
+  Classes to make secondary modifications to an existing class or structure.
+*/
+.blue-alert {
+  background-color: var(--btn-blue);
+}
+
+.blue-btn {
+  background-color: var(--btn-blue);
+}
+
+.blue-btn:hover {
+  background-color: var(--btn-blue-hv);
+}
+
+.red-btn {
+  background-color: var(--btn-red);
+}
+
+.red-btn:hover {
+  background-color: var(--btn-red-hv);
+}
+
+.disabled-btn {
+  transition: none;
+  background-color: var(--btn-disable);
+  color: var(--body-fg);
+}
+
+.disabled-btn:hover {
+  transform: none;
+  background-color: var(--btn-disable);
+}
+
+.header-center {
+  justify-self: center;
+}
+
+.main-center {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.flex-col-center {
+  align-items: center;
+}
+
+.max-80 {
+  height: 80%;
+}
+
+.grid-self-down {
+  align-self: flex-end;
+}
+
+.grid-self-top {
+  align-self: flex-start;
+}
+
+.grid-self-center {
+  align-self: center;
+}
+
+.mt {
+  margin-top: 1rem
+}
+
+.txt-center {
+  text-align: center;
+}
+
+.no-margin-hz {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.mini-mg-btm {
+  margin-bottom: 1rem;
+}
+
+.disp-flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block tab_title %} Privacy Policy | Intervenr {% endblock tab_title %}
+
+{% block header_title %}
+  <h1 class="header--title header-center">Privacy Policy</h1>
+{% endblock header_title %}
+
+{% block main_body %}
+  <h1 class="main__header main-center">Joining Intervenr</h1>
+  <div class="main__text">
+    Intervenr is a platform for studying online media run by researchers at the University of Pennsylvania. 
+    You can learn more at our <a href="{% url 'frontend:about' %}">About</a> page. 
+    This website does not collect or store any data about you unless you choose to sign up. 
+    We do not use third party cookies and will not track you for advertising purposes. 
+  </div>
+  <h1 class="main__header main-center">The Intervenr Research Project</h1>
+  <div class="main__text">
+    <strong>Intervenr is a research study.</strong> 
+    Our goal is to learn about the types of media people consume online, 
+    and how changing that media affects them. If you choose to participate, we will 
+    ask you to install our Chrome extension (for a limited time) which will record 
+    selected content from websites you visit (online advertisements in the case of our ads study). We will also ask you to complete three surveys during your participation.
+  </div>
+  <div class="main__text">
+    <strong>You are free to end your participation at any time.</strong> 
+    If you choose to enroll in the project, only the research team will have access to your data, 
+    and any results will be calculated and reported in aggregate across all participants. Your 
+    data will be mapped to an de-identified ID, and will be destroyed following project completion. 
+    None of your Incognito browsing will be recorded, and you will have the option to redact 
+    any data that you do not want included in the project. Your participation will be confidential, 
+    and no reports or publications identify you as being part of the project.
+  </div>
+  <div class="main__text">
+    <strong>
+      Your part in this study will be handled in a confidential manner. Any reports or 
+      publications on this research will not identify you as being part of this study.
+    </strong>
+  </div>
+  <h1 class="main__header main-center">Questions, Comments, or Concerns?</h1>
+  <div class="main__text">
+    If you have questions or want to know more, you can contact the team at <a href="mailto:intervenr-research-study@seas.upenn.edu">intervenr-research-study@seas.upenn.edu</a> 
+    or the Principal Investigator, Danaë Metaxa, at <a href="mailto:metaxa@seas.upenn.edu">metaxa@seas.upenn.edu</a>. If you have any 
+    concerns, complaints, or questions about the research or your rights as a participant, 
+    please contact the University of Pennsylvania IRB to speak to someone independent of the research team at 
+    215-573-2540, or email at <a href="mailto:PROVOST-IRB@pobox.upenn.edu">PROVOST-IRB@pobox.upenn.edu</a>. 
+  </div>
+{% endblock main_body %}

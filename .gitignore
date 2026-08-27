@@ -1,0 +1,31 @@
+# Major directories to ignore
+bin/
+include/
+.venv/
+.node_modules/
+node_modules/
+.vscode/
+env/
+.idea/
+
+# Major files to ignore
+.Python
+.DS_Store
+*.sqlite3
+*.manifest
+*.spec
+package-lock.json
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Django stuff
+*.log
+
+# Environment / secrets
+.env
+.env.*
+staticfiles/

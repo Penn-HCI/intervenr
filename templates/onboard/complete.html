@@ -1,0 +1,28 @@
+{% extends "onboard/base.html" %}
+{% load static %}
+
+{% block tab_title %} Sign Up | Intervenr {% endblock tab_title %}
+
+{% block onboard_flow_title %} 
+  {% if ONBOARD_CODE_ERROR %} 
+    Sign Up Error
+  {% else %} 
+    Sign Up Complete
+  {% endif %} 
+{% endblock onboard_flow_title %}
+
+{% block consent %}
+{% endblock consent%}
+
+{% block main_text %}
+  <div class="main__spacer"></div>
+  <div class="main__text main-center txt-center">
+    {{ completion_message }}
+  </div>
+{% endblock main_text %}
+
+{% block main_form_action %}
+  <div class="main__form--action">
+      <a href="{% url form_url.link %}" class="main__button main-center clean-style">{{ completion_link_message }}</a>
+  </div>
+{% endblock main_form_action %}
